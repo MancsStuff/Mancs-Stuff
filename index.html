@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mancs Stuff Ltd — Specialist Design. Oldham, Manchester.</title>
+<meta name="description" content="Mancs Stuff Ltd — specialist furniture design, artwork, illustration and brand identity. Made in Oldham, Manchester. UK-wide.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:     #1a1817;
+    --offwhite:  #f2ede6;
+    --coral:     #d85a30;
+    --teal:      #1d9e75;
+    --warm-gray: #b4a99a;
+    --mid:       #3a3532;
+    --mid-dark:  #2a2825;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--offwhite); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; cursor: default; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 1px solid rgba(242,237,230,0.07);
+    background: rgba(26,24,23,0.9);
+    backdrop-filter: blur(16px);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 0.85rem 2.5rem; }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--offwhite); text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--offwhite); }
+  .nav-cta { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; background: var(--coral); color: var(--black); padding: 0.6rem 1.4rem; text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .hero-bg-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32vw;
+    color: rgba(242,237,230,0.028);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -48%);
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10rem 4rem 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-location::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--coral);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 13vw, 14rem);
+    line-height: 0.88;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.35s forwards;
+  }
+
+  .hero-title .accent { color: var(--coral); }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px var(--offwhite);
+    color: transparent;
+  }
+
+  .hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid rgba(242,237,230,0.08);
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.65s forwards;
+  }
+
+  .hero-stat {
+    padding: 2rem 2.5rem;
+    border-right: 1px solid rgba(242,237,230,0.08);
+    transition: background 0.3s;
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat:hover { background: rgba(242,237,230,0.03); }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--offwhite);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm-gray); }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--coral);
+    overflow: hidden;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: marquee 18s linear infinite;
+  }
+
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.18em;
+    color: var(--black);
+    padding: 0 2rem;
+    white-space: nowrap;
+  }
+
+  .marquee-dot {
+    color: rgba(26,24,23,0.35);
+    padding: 0 0.5rem;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .intro-left {
+    background: var(--mid);
+    padding: 5rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .intro-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .intro-tag::before { content: ''; width: 28px; height: 1px; background: var(--teal); }
+
+  .intro-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+  }
+
+  .intro-founded {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    padding-top: 2rem;
+    border-top: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .intro-right { padding: 5rem 4.5rem; display: flex; flex-direction: column; justify-content: center; }
+
+  .intro-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    line-height: 1.2;
+    color: var(--offwhite);
+    margin-bottom: 2rem;
+  }
+
+  .intro-heading em { color: var(--coral); font-style: italic; }
+
+  .intro-body {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--warm-gray);
+    max-width: 560px;
+    margin-bottom: 3rem;
+  }
+
+  .intro-body strong { color: var(--offwhite); font-weight: 500; }
+
+  .btn-primary { display: inline-block; background: var(--coral); color: var(--black); padding: 0.9rem 2.4rem; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: opacity 0.2s; margin-right: 1rem; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { display: inline-block; border: 1px solid rgba(242,237,230,0.2); color: var(--offwhite); padding: 0.9rem 2.4rem; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; transition: border-color 0.2s; }
+  .btn-ghost:hover { border-color: var(--offwhite); }
+
+  /* ── SERVICES ── */
+  .services { border-bottom: 1px solid rgba(242,237,230,0.08); }
+
+  .services-header {
+    padding: 4rem 4rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .services-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 0.92;
+  }
+
+  .services-sub { font-size: 0.88rem; color: var(--warm-gray); max-width: 240px; text-align: right; line-height: 1.65; }
+
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(242,237,230,0.08); }
+
+  .service-card {
+    background: var(--black);
+    padding: 3rem 2.5rem;
+    transition: background 0.3s;
+    text-decoration: none;
+    display: block;
+  }
+  .service-card:hover { background: var(--mid); }
+
+  .sc-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(242,237,230,0.06);
+    line-height: 1;
+    margin-bottom: 1.25rem;
+    transition: color 0.3s;
+  }
+  .service-card:hover .sc-num { color: var(--coral); }
+
+  .sc-bar { width: 32px; height: 2px; background: var(--coral); margin-bottom: 1.5rem; transition: width 0.3s; }
+  .service-card:hover .sc-bar { width: 52px; }
+
+  .sc-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--offwhite); margin-bottom: 1rem; }
+  .sc-body { font-size: 0.87rem; line-height: 1.75; color: var(--warm-gray); margin-bottom: 1.75rem; }
+
+  .sc-link {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--coral);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sc-link::after { content: '→'; transition: transform 0.2s; }
+  .service-card:hover .sc-link::after { transform: translateX(4px); }
+
+  /* ── RECORD BANNER ── */
+  .record {
+    background: var(--mid-dark);
+    padding: 5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .record::before {
+    content: '13';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40vw;
+    color: rgba(242,237,230,0.025);
+    position: absolute;
+    right: -5vw;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .record-tag { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--coral); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+  .record-tag::before { content: ''; width: 28px; height: 1px; background: var(--coral); }
+
+  .record-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 2;
+  }
+
+  .record-right { position: relative; z-index: 2; }
+
+  .record-body { font-size: 1rem; line-height: 1.85; color: var(--warm-gray); margin-bottom: 2rem; }
+  .record-body strong { color: var(--offwhite); font-weight: 500; }
+
+  .record-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid rgba(242,237,230,0.15);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+  }
+  .record-badge span { color: var(--coral); font-weight: 500; }
+
+  /* ── BOOKS ── */
+  .books {
+    padding: 5rem 4rem;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .books-left {}
+
+  .books-tag { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+  .books-tag::before { content: ''; width: 28px; height: 1px; background: var(--teal); }
+
+  .books-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 0.95; margin-bottom: 1.5rem; }
+
+  .books-body { font-size: 1rem; line-height: 1.85; color: var(--warm-gray); margin-bottom: 2.5rem; }
+  .books-body strong { color: var(--offwhite); font-weight: 500; }
+
+  .books-right {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .book-spine {
+    height: 160px;
+    border-radius: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .book-spine:hover { transform: translateY(-6px); }
+
+  .book-spine span {
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    opacity: 0.6;
+    font-weight: 500;
+  }
+
+  /* ── TESTIMONIAL / QUOTE ── */
+  .quote-section {
+    padding: 6rem 4rem;
+    border-bottom: 1px solid rgba(242,237,230,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-section::before {
+    content: '"';
+    font-family: 'DM Serif Display', serif;
+    font-size: 30vw;
+    color: rgba(242,237,230,0.025);
+    position: absolute;
+    top: -5vw;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+    line-height: 1.35;
+    color: var(--offwhite);
+    max-width: 860px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .quote-text em { color: var(--coral); }
+
+  .quote-author { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--warm-gray); position: relative; z-index: 2; }
+
+  /* ── CTA ── */
+  .cta {
+    padding: 7rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::after {
+    content: 'GO';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40vw;
+    color: rgba(242,237,230,0.02);
+    position: absolute;
+    right: -4vw;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .cta-eyebrow { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 1.25rem; }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+  }
+
+  .cta-right { position: relative; z-index: 2; }
+
+  .cta-body { font-size: 1rem; line-height: 1.8; color: var(--warm-gray); margin-bottom: 2.5rem; }
+  .cta-body strong { color: var(--offwhite); font-weight: 500; }
+
+  .cta-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(242,237,230,0.08);
+  }
+
+  .cta-contact a {
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: color 0.2s;
+  }
+  .cta-contact a:hover { color: var(--offwhite); }
+  .cta-contact a::before { content: '→'; color: var(--coral); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(242,237,230,0.08);
+    padding: 2.5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    font-size: 0.72rem;
+    color: var(--warm-gray);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.12em; color: var(--offwhite); }
+  .footer-links { display: flex; gap: 1.5rem; justify-content: center; }
+  .footer-links a { color: var(--warm-gray); text-decoration: none; transition: color 0.2s; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .footer-links a:hover { color: var(--offwhite); }
+  .footer-right { text-align: right; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 820px) {
+    nav { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; width: 100%; order: 3; padding: 0.5rem 0; border-top: 1px solid rgba(242,237,230,0.08); }
+    .nav-links a { font-size: 0.65rem; }
+    .nav-cta { display: none; }
+    .hero-main { padding: 7rem 1.5rem 2rem; }
+    .hero-bottom { grid-template-columns: 1fr; }
+    .hero-stat { border-right: none; border-bottom: 1px solid rgba(242,237,230,0.08); }
+    .intro { grid-template-columns: 1fr; }
+    .intro-left { padding: 3rem 1.5rem; }
+    .intro-right { padding: 3rem 1.5rem; }
+    .services-header { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 2.5rem 1.5rem; }
+    .services-sub { text-align: left; max-width: 100%; }
+    .services-grid { grid-template-columns: 1fr; }
+    .record { grid-template-columns: 1fr; padding: 3.5rem 1.5rem; gap: 2rem; }
+    .books { grid-template-columns: 1fr; padding: 3.5rem 1.5rem; gap: 2rem; }
+    .books-right { grid-template-columns: repeat(4, 1fr); }
+    .quote-section { padding: 4rem 1.5rem; }
+    .cta { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2rem; }
+    footer { grid-template-columns: 1fr; text-align: center; padding: 2rem 1.5rem; }
+    .footer-links { justify-content: center; }
+    .footer-right { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Mancs Stuff</a>
+  <ul class="nav-links">
+    <li><a href="mancs-stuff-services.html">Services</a></li>
+    <li><a href="mancs-stuff-furniture.html">Furniture</a></li>
+    <li><a href="mancs-stuff-artwork.html">Artwork</a></li>
+    <li><a href="mancs-stuff-books.html">Books</a></li>
+    <li><a href="mancs-stuff-about.html">About</a></li>
+    <li><a href="mailto:hello@mancsstuff.com">Contact</a></li>
+  </ul>
+  <a href="tel:07402692728" class="nav-cta">Call us</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">MANCS</div>
+  <div class="hero-main">
+    <p class="hero-location">Oldham, Manchester · Broadstairs, Kent</p>
+    <h1 class="hero-title">
+      <span class="outline">Specialist</span><br>
+      Design<br>
+      <span class="accent">Studio.</span>
+    </h1>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-stat">
+      <span class="stat-num">3</span>
+      <p class="stat-label">Creative disciplines</p>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">7</span>
+      <p class="stat-label">Published books</p>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">13</span>
+      <p class="stat-label">Lunar moon drums</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">Furniture Design</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Artwork &amp; Illustration</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Logos &amp; Brand Identity</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Made in Manchester</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">UK Wide</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Guinness World Record</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Furniture Design</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Artwork &amp; Illustration</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Logos &amp; Brand Identity</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Made in Manchester</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">UK Wide</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Guinness World Record</span><span class="marquee-dot">·</span>
+  </div>
+</div>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="intro-left">
+    <div class="intro-tag">Est. Oldham 2023</div>
+    <div class="intro-big">Raw.<br>Real.<br>Manc.</div>
+    <div class="intro-founded">Mancs Stuff Ltd · Registered England &amp; Wales</div>
+  </div>
+  <div class="intro-right">
+    <h2 class="intro-heading">Not your average<br><em>design studio.</em></h2>
+    <p class="intro-body">Mancs Stuff was built from the ground up in Oldham by a <strong>craftsman, author, and artist</strong> who believes design should have soul — not just style. We make furniture that lasts, art that means something, and brands that look like the businesses behind them.<br><br>We're the same people who restored the bench in your local café, wrote 7 books, and are currently attempting a <strong>Guinness World Record</strong> with 13 hand-built lunar moon drums. Creativity isn't a job title here — it's just how we live.</p>
+    <div>
+      <a href="mancs-stuff-about.html" class="btn-primary">Our story</a>
+      <a href="mancs-stuff-services.html" class="btn-ghost">What we do</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services">
+  <div class="services-header">
+    <h2 class="services-title">What<br>we do.</h2>
+    <p class="services-sub">Three disciplines. One creative vision. All made by hand in Greater Manchester.</p>
+  </div>
+  <div class="services-grid">
+    <a href="mancs-stuff-services.html#furniture" class="service-card">
+      <div class="sc-num">01</div>
+      <div class="sc-bar"></div>
+      <h3 class="sc-title">Furniture &amp; product design</h3>
+      <p class="sc-body">Restored, upcycled and bespoke handcrafted furniture. Each piece is one of a kind, built to last, and made with proper northern craft.</p>
+      <span class="sc-link">From £85</span>
+    </a>
+    <a href="mancs-stuff-services.html#artwork" class="service-card">
+      <div class="sc-num">02</div>
+      <div class="sc-bar"></div>
+      <h3 class="sc-title">Artwork &amp; illustration</h3>
+      <p class="sc-body">Original paintings, limited prints and commissions with real character. Art that looks like it came from somewhere — because it did.</p>
+      <span class="sc-link">From £25</span>
+    </a>
+    <a href="mancs-stuff-services.html#branding" class="service-card">
+      <div class="sc-num">03</div>
+      <div class="sc-bar"></div>
+      <h3 class="sc-title">Logos &amp; brand identity</h3>
+      <p class="sc-body">Honest brand work built around who you actually are. No templates, no recycled ideas — just your story turned into something visual.</p>
+      <span class="sc-link">From £150</span>
+    </a>
+  </div>
+</section>
+
+<!-- GUINNESS RECORD -->
+<section class="record">
+  <div>
+    <div class="record-tag">Guinness application pending adjudication</div>
+    <h2 class="record-title">World's<br>First<br>13 Lunar<br>Moon<br>Drums.</h2>
+  </div>
+  <div class="record-right">
+    <p class="record-body">13 hand-crafted lunar moon drums — one for each phase of the moon. <strong>Birthed by Edwina Staniforth, artwork by Peter Yankowski</strong> — Ancestors Awakening: Neolithic Treasure collection.</p>
+    <p class="record-body">Christopher Leece <strong>curated this extraordinary collection</strong> and is submitting a Guinness World Record application for what is believed to be the world's first complete set of 13 lunar moon drums (Guinness application pending adjudication) — helping bring this remarkable work to a global audience.</p>
+    <div class="record-badge">
+      <span>Status:</span> Guinness application in progress · Pending adjudication · 2026
+    </div>
+  </div>
+</section>
+
+<!-- BOOKS -->
+<section class="books">
+  <div class="books-left">
+    <div class="books-tag">Published author</div>
+    <h2 class="books-title">7 Books.<br>All Written<br>Here.</h2>
+    <p class="books-body">The founder of Mancs Stuff is also a <strong>published author of 7 books</strong> — memoirs, children's series and working-class heritage. Available on Amazon, Google Play and as signed copies direct from Christopher.<br><br>Born in Manchester, raised in Kent — these books carry both.</p>
+    <a href="mancs-stuff-books.html" class="btn-primary">See all books</a>
+  </div>
+  <div class="books-right">
+    <a href="https://www.amazon.co.uk/MANCHESTER-MAZE-Christopher-Ryan-Leece/dp/B0DSH64G2B" target="_blank" rel="noopener">
+      <img src="https://m.media-amazon.com/images/P/B0DSH64G2B.01.jpg" alt="The Manchester Maze" style="width:100%;height:160px;object-fit:cover;border-radius:2px;box-shadow:4px 4px 0 rgba(0,0,0,0.4);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://www.amazon.co.uk/Donkey-Stone-Rag-Bone-Working-Class/dp/B0G647ZD1G" target="_blank" rel="noopener">
+      <img src="https://m.media-amazon.com/images/P/B0G647ZD1G.01.jpg" alt="The Donkey Stone" style="width:100%;height:160px;object-fit:cover;border-radius:2px;box-shadow:4px 4px 0 rgba(0,0,0,0.4);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://www.amazon.co.uk/ADVENTURES-FLOUR-Valerie-M-B-Hickey/dp/B0F6NPD887" target="_blank" rel="noopener">
+      <img src="https://m.media-amazon.com/images/P/B0F6NPD887.01.jpg" alt="Adventures of a Bag of Flour" style="width:100%;height:160px;object-fit:cover;border-radius:2px;box-shadow:4px 4px 0 rgba(0,0,0,0.4);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://www.amazon.co.uk/Minnies-Tale-Adventures-Bag-Flour/dp/B0FJ8V1XD3" target="_blank" rel="noopener">
+      <img src="https://m.media-amazon.com/images/P/B0FJ8V1XD3.01.jpg" alt="Minnie's Tale" style="width:100%;height:160px;object-fit:cover;border-radius:2px;box-shadow:4px 4px 0 rgba(0,0,0,0.4);grid-column:span 1;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <p class="quote-text">"Design should look like it was made by someone who <em>cares</em> — not by someone who just knows the software."</p>
+  <p class="quote-author">Chris — Founder, Mancs Stuff Ltd</p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div>
+    <p class="cta-eyebrow">Let's make something</p>
+    <h2 class="cta-title">Got a<br>project?<br>Tell us.</h2>
+  </div>
+  <div class="cta-right">
+    <p class="cta-body">Whether you need a logo, a restored bench, a piece of original artwork, or something completely different — <strong>get in touch</strong>. We respond within 24 hours and we always start with a proper conversation, not a quote form.</p>
+    <a href="mailto:hello@mancsstuff.com" class="btn-primary">Start a conversation</a>
+    <div class="cta-contact">
+      <a href="mancs-stuff-services.html">See all services and pricing</a>
+      <a href="mancs-stuff-about.html">Read our full story</a>
+      <a href="tel:07402692728">07402 692728</a>
+      <a href="mailto:hello@mancsstuff.com">hello@mancsstuff.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">Mancs Stuff</span>
+  <nav class="footer-links">
+    <a href="mancs-stuff-services.html">Services</a>
+    <a href="mancs-stuff-furniture.html">Furniture</a>
+    <a href="mancs-stuff-artwork.html">Artwork</a>
+    <a href="mancs-stuff-books.html">Books</a>
+    <a href="mancs-stuff-about.html">About</a>
+    <a href="mailto:hello@mancsstuff.com">Contact</a>
+  </nav>
+  <div class="footer-right">
+    <p>© 2026 Mancs Stuff Ltd.</p>
+    <p style="margin-top:4px;">Oldham, Manchester · Broadstairs, Kent</p>
+    <p style="margin-top:4px;"><a href="tel:07402692728" style="color:var(--warm-gray);text-decoration:none;">07402 692728</a></p>
+    <p style="margin-top:4px;"><a href="mailto:hello@mancsstuff.com" style="color:var(--warm-gray);text-decoration:none;">hello@mancsstuff.com</a></p>
+    <div style="display:flex;gap:1rem;margin-top:8px;justify-content:flex-end;">
+      <a href="https://www.instagram.com/mancsstuff" target="_blank" rel="noopener" style="color:var(--warm-gray);text-decoration:none;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;">Instagram</a>
+      <a href="https://www.facebook.com/share/17aHbEn8vh/" target="_blank" rel="noopener" style="color:var(--warm-gray);text-decoration:none;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;">Facebook</a>
+      <a href="https://www.tiktok.com/@mancsstuff" target="_blank" rel="noopener" style="color:var(--warm-gray);text-decoration:none;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;">TikTok</a>
+    </div>
+  </div>
+  <div class="footer-legal" style="padding:1.25rem 4rem;background:rgba(0,0,0,0.2);border-top:1px solid rgba(242,237,230,0.06);">
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-bottom:3px;"><strong style="color:rgba(180,169,154,0.85);">Mancsstuff Ltd</strong> | Registered in England and Wales | Company Number: <strong style="color:rgba(180,169,154,0.85);">16178518</strong></p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-bottom:3px;">Registered Office: B8, East Northdown Business Centre, George Hill Road, Thanet, CT9 3FF</p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-top:6px;font-style:italic;">This website is operated by Christopher Leece as a Sole Trader. This website is operated by Christopher Leece. Mancsstuff Ltd is currently a dormant entity. Handyman services and furniture restoration are provided by Christopher Leece as a Sole Trader (t/a ChrisCanHandyman). Mancsstuff Ltd holds no liability for manual works undertaken by the sole trader.</p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-top:8px;">© 2026 Christopher Leece / Mancsstuff Ltd. All rights reserved. | <a href="mancs-stuff-legal.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Legal &amp; Copyright</a> | <a href="mancs-stuff-contact.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Privacy Policy</a></p>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#2a2825;border-top:1px solid rgba(242,237,230,0.12);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+  <p style="font-size:0.8rem;color:#b4a99a;line-height:1.6;max-width:700px;margin:0;">
+    This website does not use tracking or advertising cookies. We only use a session cookie to remember your cookie preference.
+    See our <a href="mancs-stuff-legal.html" style="color:#1d9e75;text-decoration:none;">Privacy Policy</a> for details.
+  </p>
+  <button onclick="acceptCookies()" style="background:#d85a30;color:#1a1817;border:none;padding:0.6rem 1.5rem;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Got it</button>
+</div>
+<script>
+function acceptCookies(){
+  document.getElementById('cookieBanner').style.display='none';
+  localStorage.setItem('cookieAccepted','true');
+}
+window.addEventListener('load',function(){
+  if(!localStorage.getItem('cookieAccepted')){
+    document.getElementById('cookieBanner').style.display='flex';
+  }
+});
+</script>
+
+</body>
+</html>
