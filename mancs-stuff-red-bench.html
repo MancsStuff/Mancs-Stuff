@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="mancsstuff-logo.jpg">
+<link rel="apple-touch-icon" href="mancsstuff-logo.jpg">
+<title>The Red Bench Project — Official Partner | Mancs Stuff Ltd</title>
+<meta name="description" content="Mancs Stuff Ltd is the Official Design Partner & Sponsor of The Red Bench Project — a UK suicide-prevention charity placing red benches at suicide hotspots. Saving lives, one bench at a time.">
+<meta property="og:title" content="Mancs Stuff × The Red Bench Project">
+<meta property="og:description" content="Saving lives, one bench at a time. Mancs Stuff is the Official Partner & Sponsor of The Red Bench Project.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #1a1817;
+  --offwhite: #f2ede6;
+  --coral: #d85a30;
+  --teal: #1d9e75;
+  --warm-gray: #b4a99a;
+  --mid: #3a3532;
+  --rb-red: #b73a2e;
+  --rb-red-dark: #8a2a20;
+  --rb-cream: #f5efe4;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--offwhite);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2.5rem;
+  border-bottom: 1px solid rgba(242,237,230,0.08);
+  background: rgba(26,24,23,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.12em; color: var(--offwhite); text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--coral); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; }
+.nav-links a:hover, .nav-links a.active { color: var(--offwhite); }
+.nav-rb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rb-red); display: inline-block; }
+.nav-links a.active .nav-rb-dot { background: var(--offwhite); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 8rem 3rem 4rem;
+  overflow: hidden;
+  background: var(--black);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('images/bench-margate.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.45;
+  filter: contrast(1.05) saturate(1.1);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(26,24,23,0.6) 0%, rgba(26,24,23,0.4) 50%, rgba(26,24,23,0.95) 100%);
+}
+.hero-inner { position: relative; z-index: 2; max-width: 1100px; }
+.hero-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rb-red);
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(183,58,46,0.15);
+  border: 1px solid rgba(183,58,46,0.4);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--rb-red); display: inline-block; box-shadow: 0 0 10px var(--rb-red); }
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  color: var(--offwhite);
+  margin-bottom: 1.5rem;
+}
+.hero-title em {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--rb-red);
+  font-weight: 400;
+  display: inline-block;
+}
+
+.hero-sub {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  color: var(--warm-gray);
+  max-width: 720px;
+  margin-bottom: 2.5rem;
+  line-height: 1.4;
+}
+
+.hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-rb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.6rem;
+  background: var(--rb-red);
+  color: var(--offwhite);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 2px solid var(--rb-red);
+}
+.btn-rb:hover { background: var(--rb-red-dark); border-color: var(--rb-red-dark); transform: translateY(-1px); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.6rem;
+  background: transparent;
+  color: var(--offwhite);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 2px solid rgba(242,237,230,0.3);
+}
+.btn-ghost:hover { border-color: var(--offwhite); }
+
+/* PARTNERSHIP STATEMENT */
+.statement {
+  padding: 7rem 3rem;
+  text-align: center;
+  background: var(--offwhite);
+  color: var(--black);
+}
+.statement-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--rb-red); margin-bottom: 1.5rem; font-weight: 500; }
+.statement-quote {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.15;
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+  color: var(--black);
+}
+.statement-quote span { color: var(--rb-red); }
+.statement-attr { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); }
+
+/* THE STORY (split layout) */
+.story {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  background: var(--black);
+}
+.story-aside {
+  padding: 5rem 3rem;
+  background: var(--mid);
+  border-right: 1px solid rgba(242,237,230,0.08);
+  position: relative;
+}
+.story-aside-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 2rem;
+}
+.story-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 7rem;
+  line-height: 0.85;
+  color: var(--rb-red);
+  display: block;
+}
+.story-stat-label {
+  font-size: 0.95rem;
+  color: var(--warm-gray);
+  line-height: 1.4;
+  margin-top: 0.75rem;
+  margin-bottom: 3rem;
+}
+.story-main {
+  padding: 5rem 4rem;
+}
+.section-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rb-red);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--rb-red);
+}
+.story-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 0.95;
+  margin-bottom: 2rem;
+  color: var(--offwhite);
+}
+.story-heading em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--rb-red); font-weight: 400; }
+.story-body p { font-size: 1.05rem; line-height: 1.8; color: var(--warm-gray); margin-bottom: 1.4rem; max-width: 760px; }
+.story-body strong { color: var(--offwhite); font-weight: 500; }
+
+/* MARGATE BENCH SHOWCASE */
+.bench-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--offwhite);
+  color: var(--black);
+}
+.bench-showcase-left {
+  background-image: url('images/bench-margate-detail.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 600px;
+  position: relative;
+}
+.bench-showcase-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(0,0,0,0.4));
+}
+.bench-tag {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 2;
+  background: var(--rb-red);
+  color: var(--offwhite);
+  padding: 0.7rem 1.2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.bench-showcase-right {
+  padding: 5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.bench-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.4em;
+  color: var(--rb-red);
+  margin-bottom: 1rem;
+}
+.bench-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+}
+.bench-title em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--rb-red); font-weight: 400; }
+.bench-body { font-size: 1.05rem; line-height: 1.75; color: var(--mid); margin-bottom: 1.4rem; }
+.bench-body strong { color: var(--black); font-weight: 600; }
+.bench-meta {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(26,24,23,0.12);
+}
+.bench-meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+.bench-meta-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); opacity: 0.7; }
+.bench-meta-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.04em; color: var(--rb-red); }
+
+/* MAP CTA */
+.map-cta {
+  padding: 7rem 3rem;
+  text-align: center;
+  background: var(--black);
+  border-top: 1px solid rgba(242,237,230,0.08);
+  border-bottom: 1px solid rgba(242,237,230,0.08);
+  position: relative;
+  overflow: hidden;
+}
+.map-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(183,58,46,0.08), transparent 50%),
+                    radial-gradient(circle at 80% 50%, rgba(183,58,46,0.05), transparent 50%);
+  pointer-events: none;
+}
+.map-cta-inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+.map-cta-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--rb-red); margin-bottom: 1.5rem; }
+.map-cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 0.95; margin-bottom: 1.5rem; color: var(--offwhite); }
+.map-cta-title em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--rb-red); font-weight: 400; }
+.map-cta-body { font-size: 1.1rem; line-height: 1.7; color: var(--warm-gray); margin-bottom: 2.5rem; max-width: 620px; margin-left: auto; margin-right: auto; }
+.map-preview {
+  margin-top: 3rem;
+  padding: 2.5rem;
+  background: rgba(242,237,230,0.04);
+  border: 1px dashed rgba(183,58,46,0.4);
+  border-radius: 4px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.map-preview-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rb-red); margin-bottom: 0.8rem; }
+.map-preview-text { font-size: 0.95rem; color: var(--warm-gray); line-height: 1.6; }
+
+/* DONATE / CHARITY LINKS */
+.charity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  background: var(--offwhite);
+}
+.charity-card {
+  padding: 4rem 2.5rem;
+  border-right: 1px solid rgba(26,24,23,0.08);
+  transition: background 0.2s;
+  text-decoration: none;
+  color: var(--black);
+  display: block;
+}
+.charity-card:last-child { border-right: none; }
+.charity-card:hover { background: rgba(183,58,46,0.06); }
+.charity-card-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.3em; color: var(--rb-red); margin-bottom: 1rem; }
+.charity-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; line-height: 1; margin-bottom: 0.8rem; letter-spacing: 0.02em; }
+.charity-card-body { font-size: 0.95rem; color: var(--mid); line-height: 1.6; margin-bottom: 1.5rem; }
+.charity-card-arrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rb-red); font-weight: 500; }
+
+/* CRISIS BAR */
+.crisis {
+  padding: 2rem 3rem;
+  background: var(--rb-red-dark);
+  color: var(--offwhite);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+.crisis-label { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.8; }
+.crisis-strong { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; }
+.crisis a { color: var(--offwhite); text-decoration: underline; text-underline-offset: 4px; }
+
+/* FOOTER */
+footer {
+  padding: 3rem;
+  background: var(--black);
+  border-top: 1px solid rgba(242,237,230,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--warm-gray);
+}
+footer a { color: var(--coral); text-decoration: none; }
+.footer-legal { padding: 1.25rem 4rem; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(242,237,230,0.06); }
+.footer-legal p { font-size: 0.68rem; color: rgba(180,169,154,0.6); line-height: 1.7; margin-bottom: 3px; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.25rem; }
+  .nav-links { display: none; }
+  .hero { padding: 7rem 1.5rem 3rem; }
+  .statement { padding: 4rem 1.5rem; }
+  .story { grid-template-columns: 1fr; }
+  .story-aside, .story-main { padding: 3rem 1.5rem; }
+  .bench-showcase { grid-template-columns: 1fr; }
+  .bench-showcase-left { min-height: 350px; }
+  .bench-showcase-right { padding: 3rem 1.5rem; }
+  .map-cta { padding: 4rem 1.5rem; }
+  .charity-grid { grid-template-columns: 1fr; }
+  .charity-card { border-right: none; border-bottom: 1px solid rgba(26,24,23,0.08); padding: 2.5rem 1.5rem; }
+  footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 1.5rem; }
+  .footer-legal { padding: 1.25rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:0;padding:0;"><img src="mancsstuff-logo.jpg" alt="Mancs Stuff" style="height:42px;width:auto;display:block;"></a>
+  <ul class="nav-links">
+    <li><a href="mancs-stuff-services.html">Services</a></li>
+    <li><a href="mancs-stuff-books.html">Books</a></li>
+    <li><a href="mancs-stuff-about.html">About</a></li>
+    <li><a href="mancs-stuff-toolkit.html">Toolkit</a></li>
+    <li><a href="#" class="active" style="display:inline-flex;align-items:center;gap:0;padding:0;border-bottom:2px solid #b73a2e;"><img src="images/redbench-logo-nav.png" alt="The Red Bench Project" style="height:32px;width:auto;display:block;"></a></li>
+    <li><a href="mailto:hello@mancsstuff.co.uk">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <img src="images/redbench-logo-md.png" alt="The Red Bench Project" style="width:100%;max-width:300px;height:auto;display:block;margin-bottom:1.75rem;filter:drop-shadow(0 6px 24px rgba(183,58,46,0.4));">
+    <span class="hero-eyebrow">Official Design Partner &amp; Sponsor</span>
+    <h1 class="hero-title">
+      Saving lives,<br>
+      one bench<br>
+      <em>at a time.</em>
+    </h1>
+    <p class="hero-sub">Mancs Stuff Ltd is the Official Design Partner &amp; Sponsor of <strong style="color:var(--offwhite);">The Red Bench Project</strong> — a UK suicide-prevention charity placing red benches at suicide hotspots across the country.</p>
+    <div class="hero-buttons">
+      <a href="https://theredbenchproject.co.uk" target="_blank" rel="noopener" class="btn-rb">Visit the charity →</a>
+      <a href="https://ko-fi.com/theredbenchproject" target="_blank" rel="noopener" class="btn-ghost">♥ Donate on Ko-fi</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section class="statement">
+  <p class="statement-eyebrow">Why we partnered</p>
+  <p class="statement-quote">"A red bench is more than a bench. It's a <span>place to pause</span>, a silent way of asking for help — and sometimes, all it takes to keep someone here."</p>
+  <p class="statement-attr">— Mancs Stuff &amp; The Red Bench Project</p>
+</section>
+
+<!-- THE STORY -->
+<section class="story">
+  <aside class="story-aside">
+    <p class="story-aside-label">The project</p>
+    <span class="story-stat-num">8+</span>
+    <p class="story-stat-label">Red benches installed across the UK — and growing.</p>
+    <span class="story-stat-num">4</span>
+    <p class="story-stat-label">Lives the charity knows it has saved so far.</p>
+    <span class="story-stat-num">1</span>
+    <p class="story-stat-label">Bench in Margate, hand-built by ChrisCanHandyman.</p>
+  </aside>
+  <div class="story-main">
+    <div class="section-tag">Our partnership</div>
+    <h2 class="story-heading">A cause<br>worth <em>building for.</em></h2>
+    <div class="story-body">
+      <p>The Red Bench Project was founded in 2023 by <strong>Wayne "Rambo" Groves</strong> in South Tyneside, in memory of his friend Mick Beattie. The idea is simple: place painted red benches at suicide hotspots, each carrying the Samaritans number and a QR code to immediate help.</p>
+      <p>What started as one bench on the South Shields seafront has grown into a movement. Red Benches now sit on promenades, in parks, at outdoor education centres — and on the harbour arm in Margate, hand-built by us at <strong>Mancs Stuff Ltd</strong>.</p>
+      <p>As the charity's <strong>Official Design Partner &amp; Sponsor</strong>, we provide design studio capability — branding, print, the interactive bench map, school programme materials, partnership content — at cost or pro bono. We bring the craft. They bring the cause. Together we're helping more red benches reach more places that need them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARGATE BENCH -->
+<section class="bench-showcase">
+  <div class="bench-showcase-left">
+    <span class="bench-tag">Built by ChrisCanHandyman</span>
+  </div>
+  <div class="bench-showcase-right">
+    <p class="bench-num">— THE BENCH WE BUILT —</p>
+    <h2 class="bench-title">The Margate<br><em>Red Bench.</em></h2>
+    <p class="bench-body">Sitting at the foot of the stone steps on <strong>Margate Harbour Arm</strong>, beside the Lighthouse Bar and an orange life buoy. A quiet seat with a view across Margate Sands.</p>
+    <p class="bench-body">Carrying the Samaritans 24/7 line — <strong>116 123</strong> — and a QR code to immediate mental health support. Stencilled across the back: <em>"This bench was made by ChrisCanHandyman."</em></p>
+    <p class="bench-body">It's the first Red Bench in Kent. And as more come, we'll be building those too.</p>
+    <div class="bench-meta">
+      <div class="bench-meta-item">
+        <span class="bench-meta-label">Location</span>
+        <span class="bench-meta-value">Margate Harbour Arm</span>
+      </div>
+      <div class="bench-meta-item">
+        <span class="bench-meta-label">Region</span>
+        <span class="bench-meta-value">Kent · UK</span>
+      </div>
+      <div class="bench-meta-item">
+        <span class="bench-meta-label">Maker</span>
+        <span class="bench-meta-value">ChrisCanHandyman</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP CTA -->
+<section class="map-cta">
+  <div class="map-cta-inner">
+    <img src="images/redbench-logo-nav.png" alt="The Red Bench Project" style="height:54px;width:auto;display:inline-block;margin-bottom:1.5rem;opacity:0.95;">
+    <p class="map-cta-eyebrow">— Coming soon —</p>
+    <h2 class="map-cta-title">The Red Bench<br><em>UK map.</em></h2>
+    <p class="map-cta-body">An interactive map of every Red Bench in the country. Find your nearest, get directions, scan a QR for support. Built by Mancs Stuff for the charity. Going live as soon as the bench photos and exact locations are confirmed by the team.</p>
+    <a href="red-bench-project.html" class="btn-rb">Preview the map →</a>
+    <div class="map-preview">
+      <p class="map-preview-label">What it'll do</p>
+      <p class="map-preview-text">Find your nearest Red Bench using your phone's location · view bench photos &amp; dedications · get one-tap directions &amp; what3words · share to socials · submit a bench you've seen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CHARITY LINKS -->
+<section class="charity-grid">
+  <a href="https://theredbenchproject.co.uk" target="_blank" rel="noopener" class="charity-card">
+    <div class="charity-card-num">— 01 —</div>
+    <h3 class="charity-card-title">The charity</h3>
+    <p class="charity-card-body">Visit the official Red Bench Project website. Learn the full story, see all the benches, and find ways to get involved.</p>
+    <span class="charity-card-arrow">theredbenchproject.co.uk →</span>
+  </a>
+  <a href="https://ko-fi.com/theredbenchproject" target="_blank" rel="noopener" class="charity-card">
+    <div class="charity-card-num">— 02 —</div>
+    <h3 class="charity-card-title">Donate</h3>
+    <p class="charity-card-body">Every pound helps fund another bench, another plaque, another life potentially saved. Support directly via Ko-fi.</p>
+    <span class="charity-card-arrow">Support on Ko-fi ♥ →</span>
+  </a>
+  <a href="mailto:hello@mancsstuff.co.uk?subject=Red%20Bench%20Project%20enquiry" class="charity-card">
+    <div class="charity-card-num">— 03 —</div>
+    <h3 class="charity-card-title">Get involved</h3>
+    <p class="charity-card-body">Want a Red Bench in your community? Want to commission us to build one? Get in touch with Mancs Stuff and we'll help make it happen.</p>
+    <span class="charity-card-arrow">Email us →</span>
+  </a>
+</section>
+
+<!-- CRISIS BAR -->
+<div class="crisis">
+  <span class="crisis-label">If you're struggling right now</span>
+  <span class="crisis-strong">Samaritans · 24/7 · <a href="tel:116123">116 123</a></span>
+  <span class="crisis-label">Free · UK · No judgement</span>
+</div>
+
+<footer>
+  <span style="display:inline-flex;align-items:center;gap:0.75rem;"><img src="images/redbench-logo-nav.png" alt="" style="height:36px;width:auto;display:block;opacity:0.85;">© 2026 Mancs Stuff Ltd · Official Partner &amp; Sponsor</span>
+  <span>Oldham, Greater Manchester · <a href="mailto:hello@mancsstuff.co.uk">hello@mancsstuff.co.uk</a></span>
+</footer>
+<div class="footer-legal">
+  <p><strong style="color:rgba(180,169,154,0.85);">Mancsstuff Ltd</strong> | Registered in England and Wales | Company Number: <strong style="color:rgba(180,169,154,0.85);">16178518</strong></p>
+  <p>Registered Office: B8, East Northdown Business Centre, George Hill Road, Thanet, CT9 3FF</p>
+  <p style="margin-top:6px;font-style:italic;">The Red Bench Project is operated independently. Mancs Stuff Ltd acts as Official Design Partner &amp; Sponsor providing design, build, and digital services. Donations made via Ko-fi go directly to the charity.</p>
+  <p style="margin-top:8px;">© 2026 Christopher Leece / Mancsstuff Ltd. All rights reserved. | <a href="mancs-stuff-legal.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Legal &amp; Copyright</a> | <a href="mancs-stuff-contact.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Privacy Policy</a></p>
+</div>
+
+</body>
+</html>
