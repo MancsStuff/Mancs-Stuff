@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#b73a2e">
+<title>The Red Bench Project — UK Map</title>
+<meta name="description" content="A map of Red Benches across the UK. A place to sit, think, and reach out.">
+<meta property="og:title" content="The Red Bench Project — UK Map">
+<meta property="og:description" content="Find a Red Bench near you. Suicide-awareness benches across the UK.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--paper:#f5efe4;--paper2:#ebe2d2;--ink:#1f1a17;--inkSoft:#5b5048;--red:#b73a2e;--redDark:#8a2a20;--redSoft:#e8d3cd;--gold:#c9a063;--border:rgba(31,26,23,.12)}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{font-family:'Geist',-apple-system,sans-serif;background:var(--paper);color:var(--ink);background-image:radial-gradient(circle at 20% 10%,rgba(183,58,46,.04),transparent 40%),radial-gradient(circle at 80% 90%,rgba(201,160,99,.05),transparent 40%);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+header{padding:12px 18px 10px;border-bottom:1px solid var(--border);background:rgba(245,239,228,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:30;flex-shrink:0}
+.hrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.tt{display:flex;align-items:baseline;gap:8px;min-width:0}
+.tt-main{font-family:'Instrument Serif',Georgia,serif;font-size:26px;color:var(--red);line-height:1;letter-spacing:-.01em}
+@media(min-width:640px){.tt-main{font-size:30px}}
+.tt-sub{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14px;color:var(--inkSoft);display:none}
+@media(min-width:480px){.tt-sub{display:inline}}
+.tag{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:13px;color:var(--inkSoft);margin:4px 0 0}
+.tabs{display:flex;gap:2px;padding:2px;background:var(--paper2);border:1px solid var(--border);border-radius:999px}
+.tab{display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:13px;font-weight:500;border-radius:999px;transition:all .15s;color:var(--ink)}
+.tab.active{background:var(--red);color:var(--paper)}
+.tab svg{width:14px;height:14px;flex-shrink:0}
+.tlbl{display:none}
+@media(min-width:480px){.tlbl{display:inline}}
+main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
+.view{flex:1;min-height:0;display:flex;flex-direction:column}
+.view[hidden]{display:none!important}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cont{max-width:640px;margin:0 auto;padding:18px 18px 28px;width:100%}
+#map{position:absolute;inset:0;z-index:1}
+.leaflet-container{font-family:'Geist',sans-serif;background:var(--paper2)}
+.leaflet-popup-content-wrapper{background:var(--paper);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.leaflet-popup-tip{background:var(--paper)}
+.leaflet-control-zoom a{background:var(--paper)!important;color:var(--ink)!important;border-color:var(--border)!important}
+.bench-marker{background:transparent!important;border:none!important}
+.pop-t{font-family:'Instrument Serif',Georgia,serif;font-size:18px;color:var(--ink);margin-bottom:2px;line-height:1.15}
+.pop-l{font-size:12px;color:var(--inkSoft);margin-bottom:6px}
+.pop-w3w{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);margin-bottom:6px;font-weight:500}
+.pop-btn{background:var(--red);color:var(--paper);padding:5px 12px;border-radius:2px;font-size:12px;font-weight:500;font-family:'Geist',sans-serif}
+.badge{display:inline-block;font-size:9px;background:var(--gold);color:var(--ink);padding:2px 6px;border-radius:2px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-left:4px;vertical-align:middle}
+.cnt{position:absolute;top:12px;left:12px;z-index:1000;padding:6px 14px;background:rgba(245,239,228,.95);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--ink)}
+.cnt strong{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:16px;color:var(--red);margin-right:4px}
+.card{display:flex;gap:12px;padding:14px;width:100%;text-align:left;background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:2px;margin-bottom:10px;color:inherit;transition:background .15s,transform .1s;animation:fu .4s ease-out both}
+.card:hover{background:rgba(255,255,255,.85)}
+.card:active{transform:scale(.99)}
+.cicon{width:54px;height:54px;border-radius:2px;background:var(--redSoft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red)}
+.cicon svg{width:22px;height:22px}
+.cb{flex:1;min-width:0}
+.cn{font-family:'Instrument Serif',Georgia,serif;font-size:18px;line-height:1.15;margin:0 0 2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cl{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--inkSoft);margin:2px 0 4px}
+.cl svg{width:12px;height:12px}
+.cw{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);font-weight:500;margin:2px 0 4px}
+.cd{font-size:13px;color:var(--inkSoft);line-height:1.45;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.atitle{font-family:'Instrument Serif',Georgia,serif;font-size:38px;color:var(--red);line-height:1;margin:0 0 6px}
+@media(min-width:640px){.atitle{font-size:46px}}
+.atag{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:18px;color:var(--inkSoft);margin:0 0 26px}
+.sec{margin-bottom:26px}
+.sec h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:21px;color:var(--ink);margin:0 0 8px}
+.sec p{font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px}
+.sec p strong{font-weight:600}
+.olink{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500;margin-top:4px}
+.olink:hover{background:var(--redDark)}
+.crisis{padding:16px;background:var(--redSoft);border:1px solid var(--red);border-radius:2px}
+.crisis>p{color:var(--redDark);font-size:13px;margin:0 0 10px}
+.cl-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;background:rgba(255,255,255,.55);border-radius:2px;color:var(--redDark);margin-bottom:6px}
+.cl-link:hover{background:rgba(255,255,255,.9)}
+.cl-link strong{font-weight:600;font-size:14px}
+.cl-link span{font-size:12px;opacity:.85}
+.cl-note{font-size:11px!important;padding-top:4px;color:var(--redDark)!important;margin:0!important}
+.modal-bd{position:fixed;inset:0;z-index:2000;background:rgba(31,26,23,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease-out}
+@media(min-width:640px){.modal-bd{align-items:center;padding:16px}}
+.modal{width:100%;max-width:480px;max-height:90vh;background:var(--paper);border-radius:16px 16px 0 0;overflow:hidden;display:flex;flex-direction:column;animation:su .3s ease-out}
+@media(min-width:640px){.modal{border-radius:4px}}
+.mh{position:relative;height:120px;background:var(--redSoft);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mh svg{width:44px;height:44px;color:var(--red);opacity:.5}
+.mc{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(31,26,23,.7);color:#fff;display:flex;align-items:center;justify-content:center}
+.mc svg{width:14px;height:14px}
+.mb{padding:20px;overflow-y:auto}
+.mt{font-family:'Instrument Serif',Georgia,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:var(--ink)}
+.ml{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--inkSoft);margin:0 0 14px}
+.ml svg{width:13px;height:13px}
+.w3w-card{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:2px;margin:0 0 14px;transition:all .15s}
+.w3w-card:hover{border-color:var(--red);background:rgba(255,255,255,.95)}
+.w3w-slash{font-family:'JetBrains Mono',monospace;color:var(--red);font-size:18px;font-weight:500;flex-shrink:0}
+.w3w-words{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink);font-weight:500;flex:1;word-break:break-all}
+.w3w-arrow{color:var(--inkSoft);flex-shrink:0;transition:transform .15s}
+.w3w-card:hover .w3w-arrow{transform:translateX(2px);color:var(--red)}
+.w3w-card svg{width:14px;height:14px}
+.md{font-size:14px;line-height:1.6;color:var(--ink);margin:0 0 14px}
+.meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--inkSoft);margin-bottom:16px}
+.meta span{display:flex;align-items:center;gap:4px}
+.meta svg{width:12px;height:12px}
+.dirs{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500}
+.dirs:hover{background:var(--redDark)}
+.dirs svg{width:16px;height:16px}
+.cbar{padding:10px 16px;background:var(--ink);color:var(--paper);font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;flex-shrink:0}
+.cbar svg{width:14px;height:14px;color:var(--gold)}
+.cbar a{color:var(--gold);font-weight:500;text-decoration:underline}
+.cbar .dim{opacity:.7}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="hrow">
+      <div class="tt">
+        <span class="tt-main">The Red Bench</span>
+        <span class="tt-sub">project</span>
+      </div>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg><span class="tlbl">Map</span></button>
+        <button class="tab" data-view="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span class="tlbl">List</span></button>
+        <button class="tab" data-view="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="tlbl">About</span></button>
+      </div>
+    </div>
+    <p class="tag">Red benches across the UK — places to sit, think, and reach out.</p>
+  </header>
+  <main>
+    <div class="view" id="v-map">
+      <div id="map"></div>
+      <div class="cnt"><strong id="cnt-num">0</strong>bench<span id="cnt-pl">es</span> mapped</div>
+    </div>
+    <div class="view" id="v-list" hidden>
+      <div class="scroll"><div class="cont" id="list-body"></div></div>
+    </div>
+    <div class="view" id="v-about" hidden>
+      <div class="scroll"><div class="cont">
+        <h1 class="atitle">About the benches</h1>
+        <p class="atag">Saving lives, one bench at a time.</p>
+        <div class="sec"><h3>What it is</h3>
+          <p>The Red Bench Project places painted red benches at or near suicide hotspots across the UK. Each one carries the Samaritans number and a QR code linking to mental health support.</p></div>
+        <div class="sec"><h3>How a bench helps</h3>
+          <p><strong>A place to pause.</strong> Somewhere to sit, breathe, and let the moment pass — long enough to think again.</p>
+          <p><strong>A silent cry for help.</strong> Sitting on a Red Bench can be a quiet way of saying "I'm not okay." If you see someone sitting alone on one, stop and say hello. A small kindness from a stranger can break the spell.</p></div>
+        <div class="sec"><h3>The story behind it</h3>
+          <p>The project was founded in 2023 by Wayne "Rambo" Groves in South Tyneside, in memory of his friend Mick Beatie. Wayne came up with the idea after his own struggle with depression and a suicide attempt.</p>
+          <p>What started as one bench on the seafront at South Shields has grown into a movement — with benches across the North East, the Lake District, Margate, and more being installed across the UK.</p></div>
+        <div class="sec"><h3>The official project</h3>
+          <p>This map is a community tool to help people find Red Benches. The official charity is run by Wayne and his team.</p>
+          <a class="olink" href="https://theredbenchproject.co.uk" target="_blank" rel="noopener">Visit theredbenchproject.co.uk →</a></div>
+        <div class="sec"><h3>If you're struggling right now</h3>
+          <div class="crisis">
+            <p>You don't have to go through this alone. Help is free, confidential, and available.</p>
+            <a class="cl-link" href="tel:116123"><strong>Samaritans</strong><span>24/7 — 116 123</span></a>
+            <a class="cl-link" href="sms:85258&body=SHOUT"><strong>Text SHOUT to 85258</strong><span>24/7 text</span></a>
+            <a class="cl-link" href="tel:08005858 58"><strong>CALM</strong><span>5pm–midnight — 0800 58 58 58</span></a>
+            <a class="cl-link" href="tel:08000684141"><strong>Papyrus HOPELINE247</strong><span>Under 35s — 0800 068 4141</span></a>
+            <p class="cl-note">In an emergency, call <strong>999</strong>.</p>
+          </div></div>
+        <p style="font-size:11px;text-align:center;color:var(--inkSoft);opacity:.7;margin:18px 0 0">A community-built companion to The Red Bench Project.</p>
+      </div></div>
+    </div>
+  </main>
+  <div class="cbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    <span>Need to talk? <strong>Samaritans</strong> are open 24/7 —</span>
+    <a href="tel:116123">call 116 123</a>
+    <span class="dim">(free, UK)</span>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// =================================================================
+// BENCH DATA — edit this list to add, remove, or update benches.
+// To get a what3words address: visit what3words.com or use the app
+// at the bench, then paste the three words below (without the ///).
+// Set what3words to null if you don't have it yet.
+// =================================================================
+const BENCHES = [
+  {
+    id:'south-shields-promenade',
+    name:'The First Red Bench',
+    location:'South Shields promenade, Tyne & Wear',
+    description:'The very first Red Bench, installed July 2023 between the amphitheatre and The Sand Dancer pub. Named in memory of Mick Beatie.',
+    lat:54.9979, lng:-1.4205,
+    what3words:null,
+    addedAt:'2023-07-03',
+    verified:true
+  },
+  {
+    id:'marsden-grotto',
+    name:'Marsden Grotto',
+    location:'Marsden, South Shields',
+    description:'Placed at one of the area\'s most well-known suicide hotspots.',
+    lat:54.9743, lng:-1.3850,
+    what3words:null,
+    addedAt:'2023-09-01',
+    verified:true
+  },
+  {
+    id:'mill-dam',
+    name:'Mill Dam, Customs House',
+    location:'South Shields',
+    description:'By the Customs House at Mill Dam.',
+    lat:55.0001, lng:-1.4329,
+    what3words:null,
+    addedAt:'2023-11-01',
+    verified:true
+  },
+  {
+    id:'jarrow',
+    name:'Jarrow Red Bench',
+    location:'Jarrow, Tyne & Wear',
+    description:'',
+    lat:54.9803, lng:-1.4880,
+    what3words:null,
+    addedAt:'2024-01-01',
+    verified:true
+  },
+  {
+    id:'hebburn',
+    name:'Hebburn Red Bench',
+    location:'Hebburn, Tyne & Wear',
+    description:'',
+    lat:54.9742, lng:-1.5180,
+    what3words:null,
+    addedAt:'2024-03-01',
+    verified:true
+  },
+  {
+    id:'sandhaven',
+    name:'Sandhaven Beach',
+    location:'South Shields',
+    description:'On the seafront at Sandhaven Beach.',
+    lat:55.0014, lng:-1.4128,
+    what3words:null,
+    addedAt:'2024-06-01',
+    verified:true
+  },
+  {
+    id:'thurston',
+    name:'Thurston Outdoor Education Centre',
+    location:'Coniston, Lake District',
+    description:'The first Red Bench outside the North East.',
+    lat:54.3475, lng:-3.0780,
+    what3words:null,
+    addedAt:'2024-09-01',
+    verified:true
+  },
+  {
+    id:'margate',
+    name:'Margate Red Bench',
+    location:'Margate, Kent',
+    description:'A Red Bench on the Kent coast, photographed June 2025.',
+    lat:51.3870, lng:1.3795,
+    what3words:null,
+    addedAt:'2025-06-01',
+    verified:true
+  }
+];
+// =================================================================
+
+const UK_CENTER=[54.5,-2.5], UK_ZOOM=6;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=iso=>new Date(iso).toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+const cleanW3W=w=>w?w.replace(/^\/\/\//,'').trim():null;
+
+function benchIcon(){
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 52' width='40' height='52'>
+    <defs><filter id='s' x='-20%' y='-20%' width='140%' height='140%'><feDropShadow dx='0' dy='2' stdDeviation='2' flood-opacity='0.3'/></filter></defs>
+    <g filter='url(#s)'>
+      <path d='M20 2 C9 2 2 10 2 20 C2 32 20 50 20 50 C20 50 38 32 38 20 C38 10 31 2 20 2 Z' fill='#b73a2e' stroke='#f5efe4' stroke-width='2'/>
+      <rect x='10' y='16' width='20' height='3' rx='1' fill='#f5efe4'/>
+      <rect x='10' y='21' width='20' height='3' rx='1' fill='#f5efe4'/>
+      <rect x='11' y='24' width='2' height='6' fill='#f5efe4'/>
+      <rect x='27' y='24' width='2' height='6' fill='#f5efe4'/>
+    </g></svg>`;
+  return L.divIcon({html:svg,className:'bench-marker',iconSize:[40,52],iconAnchor:[20,50],popupAnchor:[0,-44]});
+}
+
+function w3wUrl(b){
+  const w=cleanW3W(b.what3words);
+  if(w) return 'https://what3words.com/'+w;
+  return 'https://map.what3words.com/?marker='+b.lat+','+b.lng+'&zoom=20';
+}
+
+let map, markers=[];
+function initMap(){
+  map=L.map('map',{zoomControl:true}).setView(UK_CENTER,UK_ZOOM);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+  const icon=benchIcon();
+  BENCHES.forEach(b=>{
+    const m=L.marker([b.lat,b.lng],{icon}).addTo(map);
+    const w3w=cleanW3W(b.what3words);
+    const w3wHtml=w3w?`<div class="pop-w3w">///${esc(w3w)}</div>`:'';
+    m.bindPopup(`<div style="padding:4px 2px"><div class="pop-t">${esc(b.name)}${b.verified?' <span class="badge">Official</span>':''}</div>${b.location?`<div class="pop-l">${esc(b.location)}</div>`:''}${w3wHtml}<button class="pop-btn" data-id="${b.id}">View details</button></div>`);
+    m.on('popupopen',()=>{
+      const btn=document.querySelector('.pop-btn[data-id="'+b.id+'"]');
+      if(btn)btn.onclick=()=>openDetail(b);
+    });
+    markers.push(m);
+  });
+  document.getElementById('cnt-num').textContent=BENCHES.length;
+  document.getElementById('cnt-pl').textContent=BENCHES.length===1?'':'es';
+  if(BENCHES.length>1){
+    const g=L.featureGroup(markers);
+    map.fitBounds(g.getBounds().pad(0.2),{maxZoom:11});
+  }
+}
+
+function renderList(){
+  const root=document.getElementById('list-body');
+  if(BENCHES.length===0){
+    root.innerHTML='<div style="padding:60px 20px;text-align:center;color:var(--inkSoft)">No benches yet.</div>';
+    return;
+  }
+  root.innerHTML=BENCHES.map((b,i)=>{
+    const w3w=cleanW3W(b.what3words);
+    return `<button class="card" data-id="${b.id}" style="animation-delay:${i*40}ms">
+      <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div class="cb">
+        <div class="cn"><span>${esc(b.name)}</span>${b.verified?'<span class="badge">Official</span>':''}</div>
+        ${b.location?`<div class="cl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}</div>`:''}
+        ${w3w?`<div class="cw">///${esc(w3w)}</div>`:''}
+        ${b.description?`<p class="cd">${esc(b.description)}</p>`:''}
+      </div>
+    </button>`;
+  }).join('');
+  root.querySelectorAll('.card').forEach(el=>{
+    el.onclick=()=>{const b=BENCHES.find(x=>x.id===el.dataset.id);if(b)openDetail(b);};
+  });
+}
+
+function openDetail(b){
+  const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}`;
+  const w3w=cleanW3W(b.what3words);
+  const w3wBlock=w3w?
+    `<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener" title="Open in what3words">
+      <span class="w3w-slash">///</span>
+      <span class="w3w-words">${esc(w3w)}</span>
+      <svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </a>`:
+    `<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener" style="opacity:.85">
+      <span class="w3w-slash" style="color:var(--inkSoft)">///</span>
+      <span class="w3w-words" style="font-size:13px;color:var(--inkSoft);font-family:'Geist',sans-serif;font-weight:400">Find this exact spot on what3words</span>
+      <svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </a>`;
+  const root=document.getElementById('modal-root');
+  root.innerHTML=`
+    <div class="modal-bd" id="m-bd">
+      <div class="modal" id="m-inner">
+        <div class="mh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <button class="mc" id="m-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="mb">
+          <h2 class="mt">${esc(b.name)}${b.verified?' <span class="badge" style="font-size:10px;padding:3px 7px">Official</span>':''}</h2>
+          ${b.location?`<div class="ml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}</div>`:''}
+          ${w3wBlock}
+          ${b.description?`<p class="md">${esc(b.description)}</p>`:''}
+          <div class="meta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Installed ${fmtDate(b.addedAt)}</span>
+          </div>
+          <a class="dirs" href="${dirUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Get directions</a>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('m-bd').onclick=e=>{if(e.target.id==='m-bd')closeDetail();};
+  document.getElementById('m-close').onclick=closeDetail;
+  document.getElementById('m-inner').onclick=e=>e.stopPropagation();
+}
+function closeDetail(){document.getElementById('modal-root').innerHTML='';}
+
+document.getElementById('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(!t)return;
+  const v=t.dataset.view;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
+  ['map','list','about'].forEach(id=>{document.getElementById('v-'+id).hidden=(id!==v);});
+  if(v==='map'&&map)setTimeout(()=>map.invalidateSize(),50);
+});
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail();});
+
+window.addEventListener('load',()=>{initMap();renderList();});
+</script>
+</body>
+</html>
