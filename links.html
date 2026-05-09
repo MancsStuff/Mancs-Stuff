@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0807">
+<title>Mancs Stuff — All Things Christopher Leece</title>
+<meta name="description" content="Books, services, art, the Manchester Maze game, the Toolkit, YouTube and more. Everything Mancsstuff in one place.">
+<link rel="icon" type="image/jpeg" href="mancsstuff-logo.jpg">
+<link rel="apple-touch-icon" href="mancsstuff-logo.jpg">
+<meta property="og:title" content="Mancs Stuff — Christopher Leece">
+<meta property="og:description" content="Books, art, services, the Manchester Maze game and more.">
+<meta property="og:image" content="mancsstuff-banner.jpg">
+<meta property="og:url" content="https://mancsstuff.com/links.html">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --black:#0a0807;
+  --black2:#1a1612;
+  --offwhite:#f2ede6;
+  --gray:#999088;
+  --coral:#ff5e2e;
+  --coral-glow:rgba(255,94,46,0.45);
+  --cyan:#00e5d4;
+  --cyan-glow:rgba(0,229,212,0.5);
+  --magenta:#ff2cb1;
+  --magenta-glow:rgba(255,44,177,0.5);
+  --yellow:#ffd83d;
+  --yellow-glow:rgba(255,216,61,0.45);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--offwhite);
+  font-family:'DM Sans',-apple-system,sans-serif;
+  font-weight:300;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ANIMATED BACKGROUND ATMOSPHERE */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 20%, var(--coral-glow) 0%, transparent 40%),
+    radial-gradient(circle at 85% 70%, var(--cyan-glow) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, var(--magenta-glow) 0%, transparent 50%);
+  opacity:0.25;
+  pointer-events:none;
+  z-index:0;
+  animation:drift 20s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{transform:scale(1) rotate(0deg);}
+  100%{transform:scale(1.15) rotate(8deg);}
+}
+
+/* BRICK TEXTURE OVERLAY */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 28px, rgba(255,255,255,0.012) 28px, rgba(255,255,255,0.012) 29px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px);
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap{position:relative;z-index:2;max-width:580px;margin:0 auto;padding:1.5rem 1.25rem 4rem;}
+
+/* HERO */
+.hero{text-align:center;padding:1.5rem 0 2.5rem;}
+.logo-box{
+  width:160px;
+  height:160px;
+  margin:0 auto 1.5rem;
+  border-radius:24px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 40px var(--coral-glow),
+    0 0 80px var(--magenta-glow),
+    inset 0 0 0 2px rgba(255,255,255,0.1);
+  animation:pulse 4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 40px var(--coral-glow),0 0 80px var(--magenta-glow),inset 0 0 0 2px rgba(255,255,255,0.1);}
+  50%{box-shadow:0 0 60px var(--coral-glow),0 0 120px var(--cyan-glow),inset 0 0 0 2px rgba(255,255,255,0.15);}
+}
+.logo-box img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.brand-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,11vw,4.5rem);
+  letter-spacing:0.04em;
+  line-height:0.9;
+  margin-bottom:0.5rem;
+  color:var(--offwhite);
+  text-shadow:
+    0 0 20px var(--coral-glow),
+    0 0 40px var(--coral-glow);
+}
+.brand-name .accent{color:var(--coral);}
+
+.tagline{
+  font-size:0.78rem;
+  letter-spacing:0.28em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:0.4rem;
+  text-shadow:0 0 12px var(--cyan-glow);
+}
+.intro{
+  font-size:0.9rem;
+  color:var(--gray);
+  line-height:1.6;
+  max-width:380px;
+  margin:0.75rem auto 0;
+}
+
+/* SECTIONS */
+.section{margin-top:2rem;}
+.section-label{
+  font-size:0.62rem;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:var(--gray);
+  margin-bottom:0.85rem;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  padding-left:0.25rem;
+}
+.section-label::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+}
+
+/* LINK CARDS */
+.link{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  background:rgba(26,22,18,0.8);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:1rem 1.1rem;
+  text-decoration:none;
+  color:var(--offwhite);
+  margin-bottom:0.6rem;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+.link::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, transparent 0%, rgba(255,94,46,0.0) 50%, rgba(255,94,46,0.0) 100%);
+  transition:all 0.4s;
+  pointer-events:none;
+}
+.link:hover{
+  border-color:var(--coral);
+  transform:translateX(4px);
+  box-shadow:0 0 24px var(--coral-glow);
+}
+.link:hover::before{
+  background:linear-gradient(135deg, transparent 0%, rgba(255,94,46,0.06) 50%, rgba(255,94,46,0) 100%);
+}
+
+.link-icon{
+  flex-shrink:0;
+  width:48px;height:48px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.link-body{flex:1;min-width:0;}
+.link-title{
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;
+  font-size:0.98rem;
+  margin-bottom:2px;
+  letter-spacing:0.01em;
+}
+.link-sub{
+  font-size:0.72rem;
+  color:var(--gray);
+  letter-spacing:0.04em;
+}
+.link-arrow{
+  color:var(--gray);
+  font-size:1.2rem;
+  flex-shrink:0;
+  transition:all 0.3s;
+}
+.link:hover .link-arrow{color:var(--coral);transform:translateX(2px);}
+
+/* COLOUR-CODED LINK STYLES */
+.link.coral .link-icon{background:rgba(255,94,46,0.15);border-color:rgba(255,94,46,0.3);color:var(--coral);}
+.link.cyan .link-icon{background:rgba(0,229,212,0.12);border-color:rgba(0,229,212,0.3);color:var(--cyan);}
+.link.magenta .link-icon{background:rgba(255,44,177,0.12);border-color:rgba(255,44,177,0.3);color:var(--magenta);}
+.link.yellow .link-icon{background:rgba(255,216,61,0.12);border-color:rgba(255,216,61,0.3);color:var(--yellow);}
+
+/* FEATURED CARD - MANCHESTER MAZE */
+.featured{
+  background:linear-gradient(135deg, rgba(255,94,46,0.15), rgba(255,44,177,0.15));
+  border:2px solid rgba(255,94,46,0.4);
+  border-radius:18px;
+  padding:1.5rem 1.25rem;
+  margin-bottom:0.75rem;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(255,94,46,0.2);
+}
+.featured::before{
+  content:'FEATURED';
+  position:absolute;
+  top:1rem;right:1rem;
+  font-size:0.55rem;
+  letter-spacing:0.24em;
+  background:var(--coral);
+  color:var(--black);
+  padding:4px 8px;
+  border-radius:4px;
+  font-weight:700;
+}
+.featured-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;
+  line-height:0.95;
+  margin-bottom:0.5rem;
+  color:var(--offwhite);
+  text-shadow:0 0 20px var(--coral-glow);
+}
+.featured-desc{
+  font-size:0.85rem;
+  color:var(--gray);
+  margin-bottom:1.25rem;
+  line-height:1.5;
+}
+.featured-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.5rem;
+}
+.featured-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:0.75rem;
+  background:var(--coral);
+  color:var(--black);
+  text-decoration:none;
+  border-radius:10px;
+  font-size:0.78rem;
+  letter-spacing:0.06em;
+  font-weight:500;
+  transition:all 0.3s;
+  text-transform:uppercase;
+}
+.featured-btn.alt{
+  background:transparent;
+  color:var(--coral);
+  border:1.5px solid var(--coral);
+}
+.featured-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--coral-glow);}
+
+/* SOCIAL ROW */
+.socials{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:0.5rem;
+  margin-bottom:0.5rem;
+}
+.social{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.4rem;
+  padding:1rem 0.5rem;
+  background:rgba(26,22,18,0.8);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  text-decoration:none;
+  color:var(--offwhite);
+  transition:all 0.3s;
+}
+.social-icon{font-size:1.6rem;}
+.social-name{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);}
+.social.youtube:hover{border-color:#ff0000;box-shadow:0 0 24px rgba(255,0,0,0.3);}
+.social.instagram:hover{border-color:#e1306c;box-shadow:0 0 24px rgba(225,48,108,0.3);}
+.social.tiktok:hover{border-color:var(--cyan);box-shadow:0 0 24px var(--cyan-glow);}
+.social.linkedin:hover{border-color:#0a66c2;box-shadow:0 0 24px rgba(10,102,194,0.3);}
+.social.facebook:hover{border-color:#1877f2;box-shadow:0 0 24px rgba(24,119,242,0.3);}
+.social:hover .social-name{color:var(--offwhite);}
+
+/* GUINNESS HIGHLIGHT */
+.guinness{
+  background:linear-gradient(135deg, rgba(0,229,212,0.12), rgba(255,216,61,0.08));
+  border:1.5px solid rgba(0,229,212,0.3);
+  border-radius:16px;
+  padding:1.25rem;
+  margin-bottom:0.6rem;
+  text-align:center;
+}
+.guinness-eyebrow{
+  font-size:0.6rem;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:0.4rem;
+  text-shadow:0 0 8px var(--cyan-glow);
+}
+.guinness-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.4rem;
+  line-height:1.05;
+  margin-bottom:0.5rem;
+  color:var(--offwhite);
+}
+.guinness-desc{font-size:0.8rem;color:var(--gray);line-height:1.5;margin-bottom:0.85rem;}
+.guinness-link{
+  display:inline-block;
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  text-decoration:none;
+  border-bottom:1px solid var(--cyan);
+  padding-bottom:2px;
+}
+
+/* FOOTER */
+.foot{
+  margin-top:3rem;
+  padding-top:2rem;
+  border-top:1px solid rgba(255,255,255,0.06);
+  text-align:center;
+}
+.foot-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem;
+  letter-spacing:0.1em;
+  color:var(--gray);
+  margin-bottom:0.5rem;
+}
+.foot p{font-size:0.7rem;color:var(--gray);line-height:1.6;}
+.foot a{color:var(--coral);text-decoration:none;}
+.foot-legal{
+  font-size:0.6rem;
+  color:rgba(153,144,136,0.5);
+  margin-top:0.75rem;
+  line-height:1.6;
+}
+
+@media (min-width:580px){
+  .wrap{padding-top:3rem;}
+  .logo-box{width:180px;height:180px;}
+}
+
+/* Reduce motion respect */
+@media (prefers-reduced-motion: reduce){
+  body::before{animation:none;}
+  .logo-box{animation:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-box">
+      <img src="mancsstuff-logo.jpg" alt="Mancs Stuff — Manchester Bee">
+    </div>
+    <p class="tagline">Christopher Ryan Leece</p>
+    <h1 class="brand-name">MANCS<span class="accent">STUFF</span></h1>
+    <p class="intro">Author. Craftsman. Curator. Manc.<br>Books, art, services, the Manchester Maze game and more — all in one place.</p>
+  </section>
+
+  <!-- FEATURED: MANCHESTER MAZE -->
+  <section class="section">
+    <p class="section-label">The Manchester Maze</p>
+
+    <div class="featured">
+      <h2 class="featured-title">A Manchester Memoir<br>Now Playable.</h2>
+      <p class="featured-desc">Read the raw memoir of growing up in 1980s Manchester with undiagnosed autism &amp; ADHD — then play the game that brings it to life.</p>
+      <div class="featured-actions">
+        <a href="https://www.amazon.co.uk/MANCHESTER-MAZE-Christopher-Ryan-Leece/dp/B0DSH64G2B" target="_blank" rel="noopener" class="featured-btn">📖 Read the Book</a>
+        <a href="https://mancsstuff.github.io/The-Manchester-Maze-Game/" target="_blank" rel="noopener" class="featured-btn alt">🎮 Play the Game</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKS -->
+  <section class="section">
+    <p class="section-label">All 7 Books</p>
+
+    <a href="mancs-stuff-books.html" class="link coral">
+      <div class="link-icon">📚</div>
+      <div class="link-body">
+        <div class="link-title">All Books on Amazon</div>
+        <div class="link-sub">7 titles · paperback &amp; Kindle · Google Play</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+  </section>
+
+  <!-- SERVICES & TOOLKIT -->
+  <section class="section">
+    <p class="section-label">Services &amp; Gear</p>
+
+    <a href="mancs-stuff-services.html" class="link cyan">
+      <div class="link-icon">🔧</div>
+      <div class="link-body">
+        <div class="link-title">ChrisCanHandyman</div>
+        <div class="link-sub">Furniture restoration · Painting · Handyman</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="mancs-stuff-furniture.html" class="link magenta">
+      <div class="link-icon">🪑</div>
+      <div class="link-body">
+        <div class="link-title">Furniture Portfolio</div>
+        <div class="link-sub">Hand-painted benches &amp; bespoke pieces</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="mancs-stuff-toolkit.html" class="link yellow">
+      <div class="link-icon">🛠️</div>
+      <div class="link-body">
+        <div class="link-title">The Crazy Manc's Toolkit</div>
+        <div class="link-sub">Gear I actually use · Amazon affiliate</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+  </section>
+
+  <!-- ART -->
+  <section class="section">
+    <p class="section-label">Original Artwork</p>
+
+    <a href="mancs-stuff-artwork.html" class="link coral">
+      <div class="link-icon">🎨</div>
+      <div class="link-body">
+        <div class="link-title">Artwork &amp; Curation</div>
+        <div class="link-sub">Original paintings · brand identity work</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+  </section>
+
+  <!-- GUINNESS HIGHLIGHT -->
+  <section class="section">
+    <p class="section-label">World Record Application</p>
+
+    <div class="guinness">
+      <p class="guinness-eyebrow">★ Pending Adjudication ★</p>
+      <h3 class="guinness-title">Ancestors Awakening<br>13 Lunar Moon Drums</h3>
+      <p class="guinness-desc">A Guinness World Records application for what is believed to be the world's first complete set of 13 lunar moon drums — one for every phase of the moon.</p>
+      <a href="mancs-stuff-artwork.html" class="guinness-link">Read the Story →</a>
+    </div>
+  </section>
+
+  <!-- SOCIALS -->
+  <section class="section">
+    <p class="section-label">Follow / Subscribe</p>
+
+    <div class="socials">
+      <a href="https://youtube.com/@mancsstuff" target="_blank" rel="noopener" class="social youtube">
+        <div class="social-icon">▶</div>
+        <div class="social-name">YouTube</div>
+      </a>
+      <a href="https://instagram.com/mancsstuff" target="_blank" rel="noopener" class="social instagram">
+        <div class="social-icon">📷</div>
+        <div class="social-name">Instagram</div>
+      </a>
+      <a href="https://tiktok.com/@mancsstuff" target="_blank" rel="noopener" class="social tiktok">
+        <div class="social-icon">♪</div>
+        <div class="social-name">TikTok</div>
+      </a>
+      <a href="https://uk.linkedin.com/in/christopher-ryan-leece-8612b8313" target="_blank" rel="noopener" class="social linkedin">
+        <div class="social-icon">in</div>
+        <div class="social-name">LinkedIn</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT & CONTACT -->
+  <section class="section">
+    <p class="section-label">More</p>
+
+    <a href="mancs-stuff-about.html" class="link cyan">
+      <div class="link-icon">ℹ</div>
+      <div class="link-body">
+        <div class="link-title">About Christopher</div>
+        <div class="link-sub">The story behind Mancsstuff</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="mancs-stuff-contact.html" class="link magenta">
+      <div class="link-icon">✉</div>
+      <div class="link-body">
+        <div class="link-title">Contact / Commission Work</div>
+        <div class="link-sub">hello@mancsstuff.com · 07402 692728</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="index.html" class="link yellow">
+      <div class="link-icon">🏠</div>
+      <div class="link-body">
+        <div class="link-title">Main Website</div>
+        <div class="link-sub">mancsstuff.com — full site</div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <p class="foot-logo">MANCSSTUFF</p>
+    <p>© 2026 Christopher Leece · Sole Trader t/a ChrisCanHandyman</p>
+    <p class="foot-legal">Mancsstuff Ltd (Co. No. 16178518) is a dormant entity.<br>ICO Registered: 00013889232 · Public Liability Insured · As an Amazon Associate, I earn from qualifying purchases.</p>
+    <p style="margin-top:0.75rem;font-size:0.65rem;">
+      <a href="mancs-stuff-legal.html">Legal &amp; Privacy</a> ·
+      <a href="mancs-stuff-terms.html">Terms</a>
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
