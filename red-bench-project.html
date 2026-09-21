@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#b73a2e">
 <title>The Red Bench Project — UK Map</title>
-<meta name="description" content="A map of Red Benches across the UK. A place to sit, think, and reach out.">
+<meta name="description" content="An interactive map of Red Benches across the UK. A place to sit, think, and reach out. Saving lives, one bench at a time.">
 <meta property="og:title" content="The Red Bench Project — UK Map">
 <meta property="og:description" content="Find a Red Bench near you. Suicide-awareness benches across the UK.">
 <meta property="og:type" content="website">
@@ -17,53 +17,82 @@
 :root{--paper:#f5efe4;--paper2:#ebe2d2;--ink:#1f1a17;--inkSoft:#5b5048;--red:#b73a2e;--redDark:#8a2a20;--redSoft:#e8d3cd;--gold:#c9a063;--border:rgba(31,26,23,.12)}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;overflow:hidden}
-body{font-family:'Geist',-apple-system,sans-serif;background:var(--paper);color:var(--ink);background-image:radial-gradient(circle at 20% 10%,rgba(183,58,46,.04),transparent 40%),radial-gradient(circle at 80% 90%,rgba(201,160,99,.05),transparent 40%);-webkit-font-smoothing:antialiased}
+body{font-family:'Geist',-apple-system,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 a{color:inherit;text-decoration:none}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-header{padding:12px 18px 10px;border-bottom:1px solid var(--border);background:rgba(245,239,228,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:30;flex-shrink:0}
-.hrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.tt{display:flex;align-items:baseline;gap:8px;min-width:0}
-.tt-main{font-family:'Instrument Serif',Georgia,serif;font-size:26px;color:var(--red);line-height:1;letter-spacing:-.01em}
-@media(min-width:640px){.tt-main{font-size:30px}}
-.tt-sub{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14px;color:var(--inkSoft);display:none}
-@media(min-width:480px){.tt-sub{display:inline}}
-.tag{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:13px;color:var(--inkSoft);margin:4px 0 0}
-.tabs{display:flex;gap:2px;padding:2px;background:var(--paper2);border:1px solid var(--border);border-radius:999px}
-.tab{display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:13px;font-weight:500;border-radius:999px;transition:all .15s;color:var(--ink)}
+header{padding:10px 14px 8px;border-bottom:1px solid var(--border);background:rgba(245,239,228,.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:30;flex-shrink:0}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.brand img{height:34px;width:auto;display:block}
+.brand-txt{display:flex;flex-direction:column;line-height:1}
+.tt-main{font-family:'Instrument Serif',Georgia,serif;font-size:20px;color:var(--red);line-height:1}
+.tt-sub{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:11px;color:var(--inkSoft);margin-top:2px}
+@media(min-width:480px){.tt-main{font-size:24px}.tt-sub{font-size:12px}}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--ink);color:var(--paper);border-radius:999px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;transition:all .15s}
+.help-btn:hover{background:#000}
+.help-btn .pulse{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulseDot 2s infinite}
+@media(min-width:480px){.help-btn{padding:7px 14px;font-size:12px}}
+.tabs{display:flex;gap:2px;padding:2px;background:var(--paper2);border:1px solid var(--border);border-radius:999px;margin:8px auto 0;width:fit-content}
+.tab{display:flex;align-items:center;gap:5px;padding:5px 10px;font-size:12px;font-weight:500;border-radius:999px;transition:all .15s;color:var(--ink)}
 .tab.active{background:var(--red);color:var(--paper)}
-.tab svg{width:14px;height:14px;flex-shrink:0}
+.tab svg{width:13px;height:13px;flex-shrink:0}
 .tlbl{display:none}
-@media(min-width:480px){.tlbl{display:inline}}
+@media(min-width:420px){.tlbl{display:inline}}
 main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
 .view{flex:1;min-height:0;display:flex;flex-direction:column}
 .view[hidden]{display:none!important}
 .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.cont{max-width:640px;margin:0 auto;padding:18px 18px 28px;width:100%}
+.cont{max-width:640px;margin:0 auto;padding:16px 16px 28px;width:100%}
 #map{position:absolute;inset:0;z-index:1}
 .leaflet-container{font-family:'Geist',sans-serif;background:var(--paper2)}
 .leaflet-popup-content-wrapper{background:var(--paper);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 .leaflet-popup-tip{background:var(--paper)}
 .leaflet-control-zoom a{background:var(--paper)!important;color:var(--ink)!important;border-color:var(--border)!important}
-.bench-marker{background:transparent!important;border:none!important}
+.bench-marker,.user-marker{background:transparent!important;border:none!important}
 .pop-t{font-family:'Instrument Serif',Georgia,serif;font-size:18px;color:var(--ink);margin-bottom:2px;line-height:1.15}
 .pop-l{font-size:12px;color:var(--inkSoft);margin-bottom:6px}
 .pop-w3w{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);margin-bottom:6px;font-weight:500}
-.pop-btn{background:var(--red);color:var(--paper);padding:5px 12px;border-radius:2px;font-size:12px;font-weight:500;font-family:'Geist',sans-serif}
+.pop-btn{background:var(--red);color:var(--paper);padding:5px 12px;border-radius:2px;font-size:12px;font-weight:500}
 .badge{display:inline-block;font-size:9px;background:var(--gold);color:var(--ink);padding:2px 6px;border-radius:2px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-left:4px;vertical-align:middle}
-.cnt{position:absolute;top:12px;left:12px;z-index:1000;padding:6px 14px;background:rgba(245,239,228,.95);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--ink)}
+.badge.planned{background:var(--paper2);color:var(--inkSoft);border:1px solid var(--border)}
+.badge.tbc{background:#c9a063;color:var(--ink)}
+.map-overlay{position:absolute;top:12px;left:12px;right:12px;z-index:1000;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}
+.cnt{padding:6px 14px;background:rgba(245,239,228,.95);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--ink);pointer-events:auto;backdrop-filter:blur(4px)}
 .cnt strong{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:16px;color:var(--red);margin-right:4px}
-.card{display:flex;gap:12px;padding:14px;width:100%;text-align:left;background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:2px;margin-bottom:10px;color:inherit;transition:background .15s,transform .1s;animation:fu .4s ease-out both}
+.find-me{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--red);color:var(--paper);border-radius:999px;font-size:12px;font-weight:500;pointer-events:auto;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.find-me svg{width:14px;height:14px}
+.find-me .fm-lbl{display:none}
+@media(min-width:420px){.find-me .fm-lbl{display:inline}}
+.nearest-banner{position:absolute;bottom:16px;left:16px;right:16px;max-width:380px;margin:0 auto;z-index:1000;background:var(--paper);border:1px solid var(--red);border-radius:4px;padding:12px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;animation:slideUp .3s ease-out;cursor:pointer}
+.nb-icon{width:32px;height:32px;border-radius:50%;background:var(--redSoft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red)}
+.nb-icon svg{width:16px;height:16px}
+.nb-text{flex:1;min-width:0}
+.nb-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--inkSoft);margin-bottom:1px}
+.nb-name{font-family:'Instrument Serif',Georgia,serif;font-size:16px;color:var(--ink);line-height:1.1;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-dist{font-size:11px;color:var(--red);font-weight:500}
+.nb-close{padding:6px;color:var(--inkSoft);flex-shrink:0}
+.nb-close svg{width:14px;height:14px}
+.region-filter{display:flex;gap:6px;padding:12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.region-filter::-webkit-scrollbar{display:none}
+.region-pill{flex-shrink:0;padding:6px 12px;background:var(--paper2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--inkSoft);white-space:nowrap;transition:all .15s;cursor:pointer}
+.region-pill.active{background:var(--red);color:var(--paper);border-color:var(--red)}
+.region-head{font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--red);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between}
+.region-head:first-child{margin-top:0}
+.region-head .rh-count{font-family:'Geist',sans-serif;font-size:11px;color:var(--inkSoft);font-weight:400;text-transform:uppercase;letter-spacing:.06em}
+.card{display:flex;gap:12px;padding:14px;width:100%;text-align:left;background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:2px;margin-bottom:10px;color:inherit;transition:background .15s;animation:fu .4s ease-out both;overflow:hidden}
 .card:hover{background:rgba(255,255,255,.85)}
-.card:active{transform:scale(.99)}
-.cicon{width:54px;height:54px;border-radius:2px;background:var(--redSoft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red)}
-.cicon svg{width:22px;height:22px}
+.card.planned{opacity:.72}
+.cphoto{width:64px;height:64px;border-radius:2px;background:var(--redSoft);background-size:cover;background-position:center;flex-shrink:0;color:var(--red);display:flex;align-items:center;justify-content:center}
+.cphoto svg{width:24px;height:24px}
+.cphoto.has-img svg{display:none}
 .cb{flex:1;min-width:0}
 .cn{font-family:'Instrument Serif',Georgia,serif;font-size:18px;line-height:1.15;margin:0 0 2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .cl{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--inkSoft);margin:2px 0 4px}
-.cl svg{width:12px;height:12px}
+.cl svg{width:12px;height:12px;flex-shrink:0}
 .cw{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);font-weight:500;margin:2px 0 4px}
 .cd{font-size:13px;color:var(--inkSoft);line-height:1.45;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cdist{font-size:11px;color:var(--red);font-weight:500;margin-top:4px}
 .atitle{font-family:'Instrument Serif',Georgia,serif;font-size:38px;color:var(--red);line-height:1;margin:0 0 6px}
 @media(min-width:640px){.atitle{font-size:46px}}
 .atag{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:18px;color:var(--inkSoft);margin:0 0 26px}
@@ -71,73 +100,124 @@ main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
 .sec h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:21px;color:var(--ink);margin:0 0 8px}
 .sec p{font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px}
 .sec p strong{font-weight:600}
-.olink{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500;margin-top:4px}
-.olink:hover{background:var(--redDark)}
+.olink{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500;margin-top:4px;margin-right:8px}
+.olink.kofi{background:#13c3ff}
 .crisis{padding:16px;background:var(--redSoft);border:1px solid var(--red);border-radius:2px}
 .crisis>p{color:var(--redDark);font-size:13px;margin:0 0 10px}
 .cl-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;background:rgba(255,255,255,.55);border-radius:2px;color:var(--redDark);margin-bottom:6px}
-.cl-link:hover{background:rgba(255,255,255,.9)}
 .cl-link strong{font-weight:600;font-size:14px}
 .cl-link span{font-size:12px;opacity:.85}
 .cl-note{font-size:11px!important;padding-top:4px;color:var(--redDark)!important;margin:0!important}
-.modal-bd{position:fixed;inset:0;z-index:2000;background:rgba(31,26,23,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease-out}
+.how-block{padding:16px;background:rgba(255,255,255,.5);border-left:3px solid var(--gold);border-radius:2px;margin-bottom:10px}
+.how-block h4{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:17px;color:var(--red);margin:0 0 6px}
+.how-block p{font-size:13px;line-height:1.6;color:var(--ink);margin:0}
+.partner{display:flex;align-items:center;gap:12px;padding:14px;background:rgba(255,255,255,.4);border:1px solid var(--border);border-radius:2px;margin-top:10px}
+.partner-mark{width:46px;height:46px;border-radius:2px;background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Instrument Serif',Georgia,serif;font-size:22px}
+.partner-body{flex:1;min-width:0}
+.partner-eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--inkSoft);margin-bottom:2px}
+.partner-name{font-family:'Instrument Serif',Georgia,serif;font-size:18px;color:var(--ink);line-height:1.1;margin-bottom:2px}
+.partner-link{font-size:12px;color:var(--red)}
+.submit-card{padding:14px;background:rgba(255,255,255,.55);border:1px dashed var(--red);border-radius:2px}
+.sf-row{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.sf-row label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--inkSoft);font-weight:500}
+.sf-row input,.sf-row textarea{font-family:'Geist',sans-serif;font-size:13px;padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:2px;color:var(--ink);width:100%;resize:vertical}
+.sf-row textarea{min-height:60px}
+.modal-bd{position:fixed;inset:0;z-index:2000;background:rgba(31,26,23,.55);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease-out}
 @media(min-width:640px){.modal-bd{align-items:center;padding:16px}}
 .modal{width:100%;max-width:480px;max-height:90vh;background:var(--paper);border-radius:16px 16px 0 0;overflow:hidden;display:flex;flex-direction:column;animation:su .3s ease-out}
 @media(min-width:640px){.modal{border-radius:4px}}
-.mh{position:relative;height:120px;background:var(--redSoft);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.mh svg{width:44px;height:44px;color:var(--red);opacity:.5}
-.mc{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(31,26,23,.7);color:#fff;display:flex;align-items:center;justify-content:center}
+.mh{position:relative;height:160px;background:var(--redSoft);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mh.no-img svg{width:44px;height:44px;color:var(--red);opacity:.5}
+.mh.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.35))}
+.mc{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(31,26,23,.7);color:#fff;display:flex;align-items:center;justify-content:center;z-index:2}
 .mc svg{width:14px;height:14px}
 .mb{padding:20px;overflow-y:auto}
-.mt{font-family:'Instrument Serif',Georgia,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:var(--ink)}
+.mt{font-family:'Instrument Serif',Georgia,serif;font-size:26px;line-height:1.1;margin:0 0 6px;color:var(--ink)}
 .ml{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--inkSoft);margin:0 0 14px}
 .ml svg{width:13px;height:13px}
-.w3w-card{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:2px;margin:0 0 14px;transition:all .15s}
-.w3w-card:hover{border-color:var(--red);background:rgba(255,255,255,.95)}
+.w3w-card{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:2px;margin:0 0 14px}
 .w3w-slash{font-family:'JetBrains Mono',monospace;color:var(--red);font-size:18px;font-weight:500;flex-shrink:0}
 .w3w-words{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink);font-weight:500;flex:1;word-break:break-all}
-.w3w-arrow{color:var(--inkSoft);flex-shrink:0;transition:transform .15s}
-.w3w-card:hover .w3w-arrow{transform:translateX(2px);color:var(--red)}
+.w3w-arrow{color:var(--inkSoft);flex-shrink:0}
 .w3w-card svg{width:14px;height:14px}
 .md{font-size:14px;line-height:1.6;color:var(--ink);margin:0 0 14px}
+.mq{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:16px;color:var(--inkSoft);padding:10px 14px;border-left:3px solid var(--gold);background:rgba(201,160,99,.08);margin:0 0 14px;line-height:1.4}
+.dedication{font-size:12px;color:var(--inkSoft);margin:0 0 14px;padding:8px 10px;background:rgba(255,255,255,.5);border-radius:2px;line-height:1.5}
 .meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--inkSoft);margin-bottom:16px}
 .meta span{display:flex;align-items:center;gap:4px}
 .meta svg{width:12px;height:12px}
-.dirs{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500}
-.dirs:hover{background:var(--redDark)}
+.action-row{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.dirs{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:140px;padding:12px;background:var(--red);color:var(--paper);border-radius:2px;font-size:14px;font-weight:500}
 .dirs svg{width:16px;height:16px}
+.share-btn,.heart-btn{display:flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:2px;font-size:13px;font-weight:500;flex-shrink:0}
+.share-btn{background:var(--ink);color:var(--paper)}
+.heart-btn{background:rgba(255,255,255,.6);border:1px solid var(--border);color:var(--ink)}
+.heart-btn.active{background:var(--redSoft);border-color:var(--red);color:var(--red)}
+.share-btn svg,.heart-btn svg{width:14px;height:14px}
+.heart-btn.active svg{fill:var(--red)}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:3000;background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;font-size:13px;animation:toastIn .25s ease-out}
 .cbar{padding:10px 16px;background:var(--ink);color:var(--paper);font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;flex-shrink:0}
 .cbar svg{width:14px;height:14px;color:var(--gold)}
 .cbar a{color:var(--gold);font-weight:500;text-decoration:underline}
 .cbar .dim{opacity:.7}
+.footnote{font-size:10px;text-align:center;color:var(--inkSoft);opacity:.7;margin:18px 0 0}
+.footnote strong{color:var(--ink);font-weight:600}
+.help-modal-bd{position:fixed;inset:0;z-index:2500;background:rgba(31,26,23,.7);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease-out}
+@media(min-width:640px){.help-modal-bd{align-items:center;padding:16px}}
+.help-modal{width:100%;max-width:480px;max-height:88vh;background:var(--paper);border-radius:16px 16px 0 0;padding:22px;overflow-y:auto;animation:su .3s ease-out}
+@media(min-width:640px){.help-modal{border-radius:4px}}
+.help-modal h2{font-family:'Instrument Serif',Georgia,serif;font-size:26px;color:var(--red);margin:0 0 4px}
+.help-modal .sub{font-family:'Instrument Serif',Georgia,serif;font-style:italic;color:var(--inkSoft);font-size:14px;margin:0 0 16px}
+.help-modal-close{float:right;color:var(--inkSoft);padding:4px;margin:-4px -4px 0 0}
+.help-modal-close svg{width:20px;height:20px}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
 @keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.4}}
+.pulse-dot{animation:pulse 2s ease-in-out infinite}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
     <div class="hrow">
-      <div class="tt">
-        <span class="tt-main">The Red Bench</span>
-        <span class="tt-sub">project</span>
+      <div class="brand">
+        <img src="redbench-logo-nav.png" alt="The Red Bench Project">
+        <div class="brand-txt">
+          <span class="tt-main">The Red Bench</span>
+          <span class="tt-sub">Saving lives, one bench at a time</span>
+        </div>
       </div>
-      <div class="tabs" id="tabs">
-        <button class="tab active" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg><span class="tlbl">Map</span></button>
-        <button class="tab" data-view="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span class="tlbl">List</span></button>
-        <button class="tab" data-view="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="tlbl">About</span></button>
-      </div>
+      <button class="help-btn" id="get-help-btn" aria-label="Get help now">
+        <span class="pulse"></span>Get Help
+      </button>
     </div>
-    <p class="tag">Red benches across the UK — places to sit, think, and reach out.</p>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg><span class="tlbl">Map</span></button>
+      <button class="tab" data-view="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span class="tlbl">List</span></button>
+      <button class="tab" data-view="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="tlbl">About</span></button>
+    </div>
   </header>
   <main>
     <div class="view" id="v-map">
       <div id="map"></div>
-      <div class="cnt"><strong id="cnt-num">0</strong>bench<span id="cnt-pl">es</span> mapped</div>
+      <div class="map-overlay">
+        <div class="cnt"><strong id="cnt-num">0</strong>bench<span id="cnt-pl">es</span> mapped</div>
+        <button class="find-me" id="find-me">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+          <span class="fm-lbl">Find nearest</span>
+        </button>
+      </div>
+      <div id="nearest-result"></div>
     </div>
     <div class="view" id="v-list" hidden>
-      <div class="scroll"><div class="cont" id="list-body"></div></div>
+      <div class="scroll"><div class="cont">
+        <div class="region-filter" id="region-filter"></div>
+        <div id="list-body"></div>
+      </div></div>
     </div>
     <div class="view" id="v-about" hidden>
       <div class="scroll"><div class="cont">
@@ -145,252 +225,219 @@ main{flex:1;position:relative;min-height:0;display:flex;flex-direction:column}
         <p class="atag">Saving lives, one bench at a time.</p>
         <div class="sec"><h3>What it is</h3>
           <p>The Red Bench Project places painted red benches at or near suicide hotspots across the UK. Each one carries the Samaritans number and a QR code linking to mental health support.</p></div>
-        <div class="sec"><h3>How a bench helps</h3>
-          <p><strong>A place to pause.</strong> Somewhere to sit, breathe, and let the moment pass — long enough to think again.</p>
-          <p><strong>A silent cry for help.</strong> Sitting on a Red Bench can be a quiet way of saying "I'm not okay." If you see someone sitting alone on one, stop and say hello. A small kindness from a stranger can break the spell.</p></div>
+        <div class="sec"><h3>How a Red Bench works</h3>
+          <div class="how-block"><h4>A place to pause</h4><p>Somewhere to sit, collect your thoughts, reflect, and calm down &mdash; long enough not to do anything drastic. Each bench also carries the Samaritans number and a QR to immediate help.</p></div>
+          <div class="how-block"><h4>A silent cry for help</h4><p>Sitting on a Red Bench is a quiet way of telling passers-by you&apos;re struggling. If you see someone sitting alone on one, please go and check on them. One small act of kindness can save a life.</p></div>
+        </div>
         <div class="sec"><h3>The story behind it</h3>
-          <p>The project was founded in 2023 by Wayne "Rambo" Groves in South Tyneside, in memory of his friend Mick Beatie. Wayne came up with the idea after his own struggle with depression and a suicide attempt.</p>
-          <p>What started as one bench on the seafront at South Shields has grown into a movement — with benches across the North East, the Lake District, Margate, and more being installed across the UK.</p></div>
+          <p>The project was founded in 2023 by <strong>Wayne &quot;Rambo&quot; Groves</strong>, a suicide survivor, after the death of his friend Mick Beattie. Wayne had been thinking about a memorial bench in Mick&apos;s memory &mdash; then realised: why wait? Why not put one there now, so it might help other people too?</p>
+          <p>After several people rejected the idea, a chance meeting with <strong>South Tyneside Council Leader Tracey Dixon</strong> made it real. In July 2023, the first Red Bench was placed on the South Shields seafront. Since then more benches have gone up across the North East, the Lake District, Kent &mdash; with more coming across the UK.</p></div>
         <div class="sec"><h3>The official project</h3>
-          <p>This map is a community tool to help people find Red Benches. The official charity is run by Wayne and his team.</p>
-          <a class="olink" href="https://theredbenchproject.co.uk" target="_blank" rel="noopener">Visit theredbenchproject.co.uk →</a></div>
-        <div class="sec"><h3>If you're struggling right now</h3>
-          <div class="crisis">
-            <p>You don't have to go through this alone. Help is free, confidential, and available.</p>
-            <a class="cl-link" href="tel:116123"><strong>Samaritans</strong><span>24/7 — 116 123</span></a>
-            <a class="cl-link" href="sms:85258&body=SHOUT"><strong>Text SHOUT to 85258</strong><span>24/7 text</span></a>
-            <a class="cl-link" href="tel:08005858 58"><strong>CALM</strong><span>5pm–midnight — 0800 58 58 58</span></a>
-            <a class="cl-link" href="tel:08000684141"><strong>Papyrus HOPELINE247</strong><span>Under 35s — 0800 068 4141</span></a>
-            <p class="cl-note">In an emergency, call <strong>999</strong>.</p>
+          <p>The official charity is run by Wayne and his team. This map is a community tool to help people find Red Benches.</p>
+          <a class="olink" href="https://theredbenchproject.co.uk" target="_blank" rel="noopener">Visit the charity &rarr;</a>
+          <a class="olink kofi" href="https://ko-fi.com/theredbenchproject" target="_blank" rel="noopener">&hearts; Support on Ko-fi</a></div>
+        <div class="sec"><h3>Design partner</h3>
+          <p>This map and a growing set of project tools are built and maintained by Mancs Stuff Ltd &mdash; Official Design Partner &amp; Sponsor of The Red Bench Project. The Red Bench in Margate was hand-built by ChrisCanHandyman.</p>
+          <div class="partner">
+            <div class="partner-mark">M</div>
+            <div class="partner-body">
+              <div class="partner-eyebrow">Official Partner &amp; Sponsor</div>
+              <div class="partner-name">Mancs Stuff Ltd</div>
+              <a class="partner-link" href="https://mancsstuff.com" target="_blank" rel="noopener">mancsstuff.com &rarr;</a>
+            </div>
           </div></div>
-        <p style="font-size:11px;text-align:center;color:var(--inkSoft);opacity:.7;margin:18px 0 0">A community-built companion to The Red Bench Project.</p>
+        <div class="sec"><h3>Know a bench we&apos;ve missed?</h3>
+          <p>If you&apos;ve spotted a Red Bench that isn&apos;t on the map &mdash; or you&apos;d like one in your area &mdash; let us know.</p>
+          <div class="submit-card">
+            <div class="sf-row"><label for="sf-name">Bench name or location</label><input id="sf-name" type="text" placeholder="e.g. Whitley Bay promenade"></div>
+            <div class="sf-row"><label for="sf-where">What3words or address (optional)</label><input id="sf-where" type="text" placeholder="///example.words.here"></div>
+            <div class="sf-row"><label for="sf-notes">Anything else</label><textarea id="sf-notes" placeholder="Photos, who installed it, dedication, etc."></textarea></div>
+            <a class="olink" id="sf-send" href="#">Send via email &rarr;</a>
+          </div></div>
+        <p class="footnote">A community-built companion to The Red Bench Project, by <strong>Mancs Stuff Ltd</strong>.</p>
       </div></div>
     </div>
   </main>
   <div class="cbar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-    <span>Need to talk? <strong>Samaritans</strong> are open 24/7 —</span>
-    <a href="tel:116123">call 116 123</a>
-    <span class="dim">(free, UK)</span>
+    <span>Need to talk? <strong>Samaritans</strong> &mdash;</span>
+    <a href="tel:116123">116 123</a>
+    <span class="dim">(free &middot; 24/7 &middot; UK)</span>
   </div>
 </div>
-
 <div id="modal-root"></div>
-
+<div id="help-modal-root"></div>
+<div id="toast-root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-// =================================================================
-// BENCH DATA — edit this list to add, remove, or update benches.
-// To get a what3words address: visit what3words.com or use the app
-// at the bench, then paste the three words below (without the ///).
-// Set what3words to null if you don't have it yet.
-// =================================================================
 const BENCHES = [
-  {
-    id:'south-shields-promenade',
-    name:'The First Red Bench',
-    location:'South Shields promenade, Tyne & Wear',
-    description:'The very first Red Bench, installed July 2023 between the amphitheatre and The Sand Dancer pub. Named in memory of Mick Beatie.',
-    lat:54.9979, lng:-1.4205,
-    what3words:null,
-    addedAt:'2023-07-03',
-    verified:true
-  },
-  {
-    id:'marsden-grotto',
-    name:'Marsden Grotto',
-    location:'Marsden, South Shields',
-    description:'Placed at one of the area\'s most well-known suicide hotspots.',
-    lat:54.9743, lng:-1.3850,
-    what3words:null,
-    addedAt:'2023-09-01',
-    verified:true
-  },
-  {
-    id:'mill-dam',
-    name:'Mill Dam, Customs House',
-    location:'South Shields',
-    description:'By the Customs House at Mill Dam.',
-    lat:55.0001, lng:-1.4329,
-    what3words:null,
-    addedAt:'2023-11-01',
-    verified:true
-  },
-  {
-    id:'jarrow',
-    name:'Jarrow Red Bench',
-    location:'Jarrow, Tyne & Wear',
-    description:'',
-    lat:54.9803, lng:-1.4880,
-    what3words:null,
-    addedAt:'2024-01-01',
-    verified:true
-  },
-  {
-    id:'hebburn',
-    name:'Hebburn Red Bench',
-    location:'Hebburn, Tyne & Wear',
-    description:'',
-    lat:54.9742, lng:-1.5180,
-    what3words:null,
-    addedAt:'2024-03-01',
-    verified:true
-  },
-  {
-    id:'sandhaven',
-    name:'Sandhaven Beach',
-    location:'South Shields',
-    description:'On the seafront at Sandhaven Beach.',
-    lat:55.0014, lng:-1.4128,
-    what3words:null,
-    addedAt:'2024-06-01',
-    verified:true
-  },
-  {
-    id:'thurston',
-    name:'Thurston Outdoor Education Centre',
-    location:'Coniston, Lake District',
-    description:'The first Red Bench outside the North East.',
-    lat:54.3475, lng:-3.0780,
-    what3words:null,
-    addedAt:'2024-09-01',
-    verified:true
-  },
-  {
-    id:'margate',
-    name:'Margate Red Bench',
-    location:'Margate, Kent',
-    description:'A Red Bench on the Kent coast, photographed June 2025.',
-    lat:51.3870, lng:1.3795,
-    what3words:null,
-    addedAt:'2025-06-01',
-    verified:true
-  }
+  {id:'south-shields-promenade',name:'The First Red Bench',location:'South Promenade, South Shields, Tyne & Wear',region:'North East',description:'The very first Red Bench, installed July 2023 on the South Shields seafront. This is where it all began.',dedication:'Kindly donated by South Tyneside Council, with special thanks to Council Leader Tracey Dixon. Inspired by Wayne\'s friend Mick Beattie.',quote:'"It\'s all about me." — Mick Beattie',plaqueNo:1,lat:54.9979,lng:-1.4205,what3words:'desk.puns.habit',photo:null,addedAt:'2023-07-03',status:'installed',verified:true},
+  {id:'marsden-grotto',name:'Marsden Grotto',location:'Marsden Grotto, South Shields, Tyne & Wear',region:'North East',description:'Placed near Marsden Grotto — a well-known local landmark and one of the area\'s suicide hotspots.',dedication:'Kindly donated by Natalie Lascelles and the customers of Rosiefest.',quote:'"You are enough, just as you are, my Dorlin."',plaqueNo:2,lat:54.9770,lng:-1.3775,what3words:null,photo:null,addedAt:'2023-09-01',status:'installed',verified:true},
+  {id:'nearby-taxis-bench',name:'The Nearby Taxis Bench',location:'South Tyneside — location TBC',region:'North East',description:'Kindly donated by Nearby Taxis, who provide private transport for the North East and support many local charities.',dedication:'Kindly donated by Nearby Taxis.',plaqueNo:3,lat:54.9979,lng:-1.4300,what3words:null,photo:null,addedAt:'2024-01-01',status:'tbc',verified:true},
+  {id:'mill-dam',name:'Mill Dam',location:'Mill Dam, South Shields, Tyne & Wear',region:'North East',description:'By the historic Customs House at Mill Dam.',dedication:'Kindly donated by Liz Watson and Sonia Morton.',quote:'"This world is a better place with you in it! Take a moment, look around and see the beauty in your life."',plaqueNo:4,lat:55.0001,lng:-1.4329,what3words:null,photo:null,addedAt:'2023-11-01',status:'installed',verified:true},
+  {id:'tyne-tunnel-hub',name:'Tyne Pedestrian Tunnel Hub South',location:'Tyne Pedestrian Tunnel Hub, South entrance',region:'North East',description:'At the south entrance of the Tyne Pedestrian Tunnel Hub.',dedication:'Kindly donated by the wonderful staff of Water View Park.',plaqueNo:5,lat:54.9834,lng:-1.4534,what3words:null,photo:null,addedAt:'2024-03-01',status:'installed',verified:true},
+  {id:'margate',name:'Margate Harbour Arm',location:'Margate Harbour Arm, Kent',region:'Kent',description:'Sitting at the foot of the stone steps on Margate Harbour Arm, beside the Lighthouse Bar. The first Red Bench in Kent — hand-built by ChrisCanHandyman / Mancs Stuff, Official Design Partner & Sponsor of the project.',dedication:'Built and installed by ChrisCanHandyman / Mancs Stuff Ltd — Official Design Partner & Sponsor.',plaqueNo:null,lat:51.3870,lng:1.3795,what3words:'rents.good.rugs',photo:'bench-margate.jpg',addedAt:'2025-06-01',status:'installed',verified:true}
 ];
-// =================================================================
 
-const UK_CENTER=[54.5,-2.5], UK_ZOOM=6;
+const UK_CENTER=[54.5,-2.5],UK_ZOOM=6;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=iso=>new Date(iso).toLocaleDateString('en-GB',{month:'short',year:'numeric'});
 const cleanW3W=w=>w?w.replace(/^\/\/\//,'').trim():null;
-
-function benchIcon(){
-  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 52' width='40' height='52'>
-    <defs><filter id='s' x='-20%' y='-20%' width='140%' height='140%'><feDropShadow dx='0' dy='2' stdDeviation='2' flood-opacity='0.3'/></filter></defs>
-    <g filter='url(#s)'>
-      <path d='M20 2 C9 2 2 10 2 20 C2 32 20 50 20 50 C20 50 38 32 38 20 C38 10 31 2 20 2 Z' fill='#b73a2e' stroke='#f5efe4' stroke-width='2'/>
-      <rect x='10' y='16' width='20' height='3' rx='1' fill='#f5efe4'/>
-      <rect x='10' y='21' width='20' height='3' rx='1' fill='#f5efe4'/>
-      <rect x='11' y='24' width='2' height='6' fill='#f5efe4'/>
-      <rect x='27' y='24' width='2' height='6' fill='#f5efe4'/>
-    </g></svg>`;
+function distKm(a,b,c,d){const R=6371,r=e=>e*Math.PI/180,dL=r(c-a),dG=r(d-b),x=Math.sin(dL/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dG/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+function fmtDist(k){if(k<1)return Math.round(k*1000)+' m away';if(k<10)return k.toFixed(1)+' km away';return Math.round(k)+' km away';}
+const HEART_KEY='rb_hearts_v1';
+function getHearts(){try{return JSON.parse(localStorage.getItem(HEART_KEY)||'{}')}catch(e){return{}}}
+function toggleHeart(id){const h=getHearts();h[id]=!h[id];localStorage.setItem(HEART_KEY,JSON.stringify(h));return h[id]}
+function hasHeart(id){return !!getHearts()[id]}
+function benchIcon(status){
+  const fill=status==='tbc'?'#c9a063':(status==='planned'?'#8a7a5c':'#b73a2e');
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 52' width='40' height='52'><defs><filter id='s' x='-20%' y='-20%' width='140%' height='140%'><feDropShadow dx='0' dy='2' stdDeviation='2' flood-opacity='0.3'/></filter></defs><g filter='url(#s)'><path d='M20 2 C9 2 2 10 2 20 C2 32 20 50 20 50 C20 50 38 32 38 20 C38 10 31 2 20 2 Z' fill='${fill}' stroke='#f5efe4' stroke-width='2'/><rect x='10' y='16' width='20' height='3' rx='1' fill='#f5efe4'/><rect x='10' y='21' width='20' height='3' rx='1' fill='#f5efe4'/><rect x='11' y='24' width='2' height='6' fill='#f5efe4'/><rect x='27' y='24' width='2' height='6' fill='#f5efe4'/></g></svg>`;
   return L.divIcon({html:svg,className:'bench-marker',iconSize:[40,52],iconAnchor:[20,50],popupAnchor:[0,-44]});
 }
-
-function w3wUrl(b){
-  const w=cleanW3W(b.what3words);
-  if(w) return 'https://what3words.com/'+w;
-  return 'https://map.what3words.com/?marker='+b.lat+','+b.lng+'&zoom=20';
+function userIcon(){
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><circle cx='12' cy='12' r='8' fill='#1f1a17' opacity='0.15' class='pulse-dot'/><circle cx='12' cy='12' r='6' fill='#1f1a17' stroke='#f5efe4' stroke-width='2'/></svg>`;
+  return L.divIcon({html:svg,className:'user-marker',iconSize:[24,24],iconAnchor:[12,12]});
 }
-
-let map, markers=[];
+function w3wUrl(b){const w=cleanW3W(b.what3words);if(w)return'https://what3words.com/'+w;return'https://map.what3words.com/?marker='+b.lat+','+b.lng+'&zoom=20';}
+let map,markers={},userMarker=null,userPos=null,activeRegion='all';
 function initMap(){
   map=L.map('map',{zoomControl:true}).setView(UK_CENTER,UK_ZOOM);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
-  const icon=benchIcon();
-  BENCHES.forEach(b=>{
-    const m=L.marker([b.lat,b.lng],{icon}).addTo(map);
+  const mapBenches=BENCHES.filter(b=>b.status!=='planned');
+  mapBenches.forEach(b=>{
+    const m=L.marker([b.lat,b.lng],{icon:benchIcon(b.status)}).addTo(map);
     const w3w=cleanW3W(b.what3words);
     const w3wHtml=w3w?`<div class="pop-w3w">///${esc(w3w)}</div>`:'';
-    m.bindPopup(`<div style="padding:4px 2px"><div class="pop-t">${esc(b.name)}${b.verified?' <span class="badge">Official</span>':''}</div>${b.location?`<div class="pop-l">${esc(b.location)}</div>`:''}${w3wHtml}<button class="pop-btn" data-id="${b.id}">View details</button></div>`);
-    m.on('popupopen',()=>{
-      const btn=document.querySelector('.pop-btn[data-id="'+b.id+'"]');
-      if(btn)btn.onclick=()=>openDetail(b);
-    });
-    markers.push(m);
+    const statusBadge=b.status==='tbc'?' <span class="badge tbc">Location TBC</span>':(b.verified?' <span class="badge">Official</span>':'');
+    m.bindPopup(`<div style="padding:4px 2px"><div class="pop-t">${esc(b.name)}${statusBadge}</div>${b.location?`<div class="pop-l">${esc(b.location)}</div>`:''}${w3wHtml}<button class="pop-btn" data-id="${b.id}">View details</button></div>`);
+    m.on('popupopen',()=>{const btn=document.querySelector('.pop-btn[data-id="'+b.id+'"]');if(btn)btn.onclick=()=>openDetail(b);});
+    markers[b.id]=m;
   });
-  document.getElementById('cnt-num').textContent=BENCHES.length;
-  document.getElementById('cnt-pl').textContent=BENCHES.length===1?'':'es';
-  if(BENCHES.length>1){
-    const g=L.featureGroup(markers);
-    map.fitBounds(g.getBounds().pad(0.2),{maxZoom:11});
-  }
+  document.getElementById('cnt-num').textContent=mapBenches.length;
+  document.getElementById('cnt-pl').textContent=mapBenches.length===1?'':'es';
+  if(mapBenches.length>1){const g=L.featureGroup(Object.values(markers));map.fitBounds(g.getBounds().pad(0.2),{maxZoom:11});}
 }
-
+function findNearest(){
+  if(!navigator.geolocation){toast('Location not supported');return}
+  const btn=document.getElementById('find-me');
+  btn.disabled=true;const orig=btn.innerHTML;
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:pulse 1.2s infinite"><circle cx="12" cy="12" r="3"/></svg><span class="fm-lbl">Finding…</span>';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    btn.disabled=false;btn.innerHTML=orig;
+    const{latitude:lat,longitude:lng}=pos.coords;
+    userPos={lat,lng};
+    if(userMarker)userMarker.remove();
+    userMarker=L.marker([lat,lng],{icon:userIcon(),zIndexOffset:1000}).addTo(map).bindPopup('You are here');
+    const installed=BENCHES.filter(b=>b.status!=='planned');
+    const sorted=installed.map(b=>({b,d:distKm(lat,lng,b.lat,b.lng)})).sort((a,b)=>a.d-b.d);
+    if(sorted.length===0)return;
+    const n=sorted[0];
+    map.fitBounds([[lat,lng],[n.b.lat,n.b.lng]],{padding:[60,60],maxZoom:13});
+    showNearestBanner(n.b,n.d);
+    if(document.getElementById('v-list').hidden===false)renderList();
+  },err=>{btn.disabled=false;btn.innerHTML=orig;toast(err.code===1?'Location permission denied':'Couldn\'t get your location');},{timeout:10000,enableHighAccuracy:true});
+}
+function showNearestBanner(b,km){
+  const root=document.getElementById('nearest-result');
+  root.innerHTML=`<div class="nearest-banner" id="nb"><div class="nb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="nb-text"><div class="nb-label">Nearest bench</div><div class="nb-name">${esc(b.name)}</div><div class="nb-dist">${fmtDist(km)}</div></div><button class="nb-close" id="nb-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`;
+  document.getElementById('nb').onclick=e=>{if(e.target.closest('#nb-close'))return;openDetail(b);};
+  document.getElementById('nb-close').onclick=e=>{e.stopPropagation();root.innerHTML=''};
+}
+function renderRegionFilter(){
+  const root=document.getElementById('region-filter');
+  const counts={};BENCHES.forEach(b=>{counts[b.region]=(counts[b.region]||0)+1});
+  const regions=Object.keys(counts).sort();
+  const total=BENCHES.length;
+  let html=`<button class="region-pill ${activeRegion==='all'?'active':''}" data-region="all">All (${total})</button>`;
+  regions.forEach(r=>{html+=`<button class="region-pill ${activeRegion===r?'active':''}" data-region="${esc(r)}">${esc(r)} (${counts[r]})</button>`;});
+  root.innerHTML=html;
+  root.querySelectorAll('.region-pill').forEach(el=>{el.onclick=()=>{activeRegion=el.dataset.region;renderList();};});
+}
 function renderList(){
+  renderRegionFilter();
   const root=document.getElementById('list-body');
-  if(BENCHES.length===0){
-    root.innerHTML='<div style="padding:60px 20px;text-align:center;color:var(--inkSoft)">No benches yet.</div>';
-    return;
-  }
-  root.innerHTML=BENCHES.map((b,i)=>{
-    const w3w=cleanW3W(b.what3words);
-    return `<button class="card" data-id="${b.id}" style="animation-delay:${i*40}ms">
-      <div class="cicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-      <div class="cb">
-        <div class="cn"><span>${esc(b.name)}</span>${b.verified?'<span class="badge">Official</span>':''}</div>
-        ${b.location?`<div class="cl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}</div>`:''}
-        ${w3w?`<div class="cw">///${esc(w3w)}</div>`:''}
-        ${b.description?`<p class="cd">${esc(b.description)}</p>`:''}
-      </div>
-    </button>`;
-  }).join('');
-  root.querySelectorAll('.card').forEach(el=>{
-    el.onclick=()=>{const b=BENCHES.find(x=>x.id===el.dataset.id);if(b)openDetail(b);};
+  const filtered=activeRegion==='all'?BENCHES:BENCHES.filter(b=>b.region===activeRegion);
+  if(filtered.length===0){root.innerHTML='<div style="padding:40px 20px;text-align:center;color:var(--inkSoft)">No benches in this region yet.</div>';return;}
+  const groups={};
+  filtered.forEach(b=>{const r=b.region||'Other';if(!groups[r])groups[r]=[];groups[r].push(b);});
+  if(userPos){Object.values(groups).forEach(a=>a.sort((x,y)=>distKm(userPos.lat,userPos.lng,x.lat,x.lng)-distKm(userPos.lat,userPos.lng,y.lat,y.lng)));}
+  const order=['North East','Lake District','Kent','North West','Other'];
+  const regions=Object.keys(groups).sort((a,b)=>{const ai=order.indexOf(a),bi=order.indexOf(b);if(ai===-1&&bi===-1)return a.localeCompare(b);if(ai===-1)return 1;if(bi===-1)return-1;return ai-bi;});
+  let html='',idx=0;
+  regions.forEach(r=>{
+    html+=`<div class="region-head">${esc(r)} <span class="rh-count">${groups[r].length} bench${groups[r].length===1?'':'es'}</span></div>`;
+    groups[r].forEach(b=>{
+      const w3w=cleanW3W(b.what3words);
+      const photoStyle=b.photo?`background-image:url('${esc(b.photo)}')`:'';
+      const photoCls=b.photo?'has-img':'';
+      const dist=userPos?fmtDist(distKm(userPos.lat,userPos.lng,b.lat,b.lng)):'';
+      const planned=b.status==='planned',tbc=b.status==='tbc';
+      let sb='';if(b.verified)sb+='<span class="badge">Official</span>';if(tbc)sb+='<span class="badge tbc">Location TBC</span>';if(planned)sb+='<span class="badge planned">Planned</span>';
+      html+=`<button class="card ${planned?'planned':''}" data-id="${b.id}" style="animation-delay:${idx*40}ms"><div class="cphoto ${photoCls}" style="${photoStyle}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="cb"><div class="cn"><span>${b.plaqueNo?`#${b.plaqueNo} `:''}${esc(b.name)}</span>${sb}</div>${b.location?`<div class="cl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}</div>`:''}${w3w?`<div class="cw">///${esc(w3w)}</div>`:''}${b.description?`<p class="cd">${esc(b.description)}</p>`:''}${dist?`<div class="cdist">${dist}</div>`:''}</div></button>`;
+      idx++;
+    });
   });
+  root.innerHTML=html;
+  root.querySelectorAll('.card').forEach(el=>{el.onclick=()=>{const b=BENCHES.find(x=>x.id===el.dataset.id);if(b)openDetail(b);};});
 }
-
 function openDetail(b){
   const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}`;
   const w3w=cleanW3W(b.what3words);
-  const w3wBlock=w3w?
-    `<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener" title="Open in what3words">
-      <span class="w3w-slash">///</span>
-      <span class="w3w-words">${esc(w3w)}</span>
-      <svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-    </a>`:
-    `<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener" style="opacity:.85">
-      <span class="w3w-slash" style="color:var(--inkSoft)">///</span>
-      <span class="w3w-words" style="font-size:13px;color:var(--inkSoft);font-family:'Geist',sans-serif;font-weight:400">Find this exact spot on what3words</span>
-      <svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-    </a>`;
+  const w3wBlock=w3w?`<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener"><span class="w3w-slash">///</span><span class="w3w-words">${esc(w3w)}</span><svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>`:`<a class="w3w-card" href="${w3wUrl(b)}" target="_blank" rel="noopener" style="opacity:.85"><span class="w3w-slash" style="color:var(--inkSoft)">///</span><span class="w3w-words" style="font-size:13px;color:var(--inkSoft);font-family:'Geist',sans-serif;font-weight:400">Find this exact spot on what3words</span><svg class="w3w-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>`;
+  const heroStyle=b.photo?`background-image:url('${esc(b.photo)}')`:'';
+  const heroCls=b.photo?'has-img':'no-img';
+  const hearted=hasHeart(b.id);
+  const dist=userPos?fmtDist(distKm(userPos.lat,userPos.lng,b.lat,b.lng)):'';
+  let sb='';if(b.verified)sb+=' <span class="badge" style="font-size:10px;padding:3px 7px">Official</span>';if(b.status==='tbc')sb+=' <span class="badge tbc" style="font-size:10px;padding:3px 7px">Location TBC</span>';if(b.status==='planned')sb+=' <span class="badge planned" style="font-size:10px;padding:3px 7px">Planned</span>';
   const root=document.getElementById('modal-root');
-  root.innerHTML=`
-    <div class="modal-bd" id="m-bd">
-      <div class="modal" id="m-inner">
-        <div class="mh">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <button class="mc" id="m-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        </div>
-        <div class="mb">
-          <h2 class="mt">${esc(b.name)}${b.verified?' <span class="badge" style="font-size:10px;padding:3px 7px">Official</span>':''}</h2>
-          ${b.location?`<div class="ml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}</div>`:''}
-          ${w3wBlock}
-          ${b.description?`<p class="md">${esc(b.description)}</p>`:''}
-          <div class="meta">
-            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Installed ${fmtDate(b.addedAt)}</span>
-          </div>
-          <a class="dirs" href="${dirUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Get directions</a>
-        </div>
-      </div>
-    </div>`;
+  root.innerHTML=`<div class="modal-bd" id="m-bd"><div class="modal" id="m-inner"><div class="mh ${heroCls}" style="${heroStyle}">${b.photo?'':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'}<button class="mc" id="m-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="mb"><h2 class="mt">${b.plaqueNo?`Red Bench #${b.plaqueNo} — `:''}${esc(b.name)}${sb}</h2>${b.location?`<div class="ml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(b.location)}${dist?` · ${esc(dist)}`:''}</div>`:''}${w3wBlock}${b.quote?`<p class="mq">${esc(b.quote)}</p>`:''}${b.description?`<p class="md">${esc(b.description)}</p>`:''}${b.dedication?`<div class="dedication">${esc(b.dedication)}</div>`:''}<div class="meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${b.status==='planned'?'Planned':(b.status==='tbc'?'Location TBC':'Installed')} ${fmtDate(b.addedAt)}</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>${esc(b.region)}</span></div><div class="action-row"><a class="dirs" href="${dirUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Get directions</a><button class="heart-btn ${hearted?'active':''}" id="heart-btn" data-id="${b.id}"><svg viewBox="0 0 24 24" fill="${hearted?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button><button class="share-btn" id="share-btn" data-id="${b.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button></div></div></div></div>`;
   document.getElementById('m-bd').onclick=e=>{if(e.target.id==='m-bd')closeDetail();};
   document.getElementById('m-close').onclick=closeDetail;
   document.getElementById('m-inner').onclick=e=>e.stopPropagation();
+  document.getElementById('heart-btn').onclick=e=>{e.stopPropagation();const a=toggleHeart(b.id);const btn=document.getElementById('heart-btn');btn.classList.toggle('active',a);btn.querySelector('svg').setAttribute('fill',a?'currentColor':'none');toast(a?'Marked as visited':'Removed');};
+  document.getElementById('share-btn').onclick=e=>{e.stopPropagation();shareBench(b)};
 }
 function closeDetail(){document.getElementById('modal-root').innerHTML='';}
-
+async function shareBench(b){
+  const url=window.location.origin+window.location.pathname+'#bench='+b.id;
+  const text=`${b.name} — a Red Bench on the UK map. A place to sit, think, and reach out.`;
+  if(navigator.share){try{await navigator.share({title:b.name,text,url});}catch(e){}}else{try{await navigator.clipboard.writeText(url);toast('Link copied');}catch(e){toast('Could not copy link');}}
+}
+function openHelpModal(){
+  const root=document.getElementById('help-modal-root');
+  root.innerHTML=`<div class="help-modal-bd" id="hm-bd"><div class="help-modal" id="hm-inner"><button class="help-modal-close" id="hm-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><h2>Need help right now?</h2><p class="sub">You are not alone. Help is free, confidential, and available.</p><div class="crisis"><a class="cl-link" href="tel:116123"><strong>Samaritans</strong><span>24/7 · 116 123</span></a><a class="cl-link" href="sms:85258&body=SHOUT"><strong>Text SHOUT to 85258</strong><span>24/7 text service</span></a><a class="cl-link" href="tel:08005858 58"><strong>CALM</strong><span>5pm–midnight · 0800 58 58 58</span></a><a class="cl-link" href="tel:08000684141"><strong>Papyrus HOPELINE247</strong><span>Under 35s · 0800 068 4141</span></a><a class="cl-link" href="https://theredbenchproject.co.uk/get-help/" target="_blank" rel="noopener"><strong>Red Bench Project — Get Help</strong><span>Find local support →</span></a><p class="cl-note">In an emergency, call <strong>999</strong>.</p></div></div></div>`;
+  document.getElementById('hm-bd').onclick=e=>{if(e.target.id==='hm-bd')closeHelpModal();};
+  document.getElementById('hm-close').onclick=closeHelpModal;
+  document.getElementById('hm-inner').onclick=e=>e.stopPropagation();
+}
+function closeHelpModal(){document.getElementById('help-modal-root').innerHTML='';}
+let toastTimer;
+function toast(msg){const root=document.getElementById('toast-root');root.innerHTML=`<div class="toast">${esc(msg)}</div>`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{root.innerHTML=''},2200);}
+function buildSubmitMail(){
+  const n=document.getElementById('sf-name').value.trim();
+  const w=document.getElementById('sf-where').value.trim();
+  const t=document.getElementById('sf-notes').value.trim();
+  const s=`New Red Bench submission: ${n||'(unnamed)'}`;
+  const b=`Bench name / location: ${n}%0D%0AWhat3words / address: ${w}%0D%0A%0D%0ANotes:%0D%0A${t}%0D%0A%0D%0A--%0D%0ASent via the Red Bench map`;
+  return `mailto:info@theredbenchproject.co.uk?subject=${encodeURIComponent(s)}&body=${b}`;
+}
 document.getElementById('tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab');if(!t)return;
   const v=t.dataset.view;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
   ['map','list','about'].forEach(id=>{document.getElementById('v-'+id).hidden=(id!==v);});
   if(v==='map'&&map)setTimeout(()=>map.invalidateSize(),50);
+  if(v==='list')renderList();
 });
-
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail();});
-
-window.addEventListener('load',()=>{initMap();renderList();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeHelpModal();}});
+function checkDeepLink(){const m=window.location.hash.match(/bench=([\w-]+)/);if(m){const b=BENCHES.find(x=>x.id===m[1]);if(b)setTimeout(()=>openDetail(b),400);}}
+window.addEventListener('load',()=>{
+  initMap();renderList();
+  document.getElementById('find-me').onclick=findNearest;
+  document.getElementById('get-help-btn').onclick=openHelpModal;
+  document.getElementById('sf-send').onclick=e=>{e.preventDefault();window.location.href=buildSubmitMail()};
+  checkDeepLink();
+});
 </script>
 </body>
 </html>
