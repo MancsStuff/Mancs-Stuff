@@ -15,7 +15,7 @@ The studio covers four disciplines:
 - **Handyman & Furniture Restoration** — bespoke painted and restored pieces, working under the trading name *ChrisCanHandyman*
 - **Original Artwork** — paintings, illustration and brand design
 - **Self-Published Books** — 7 titles available on Amazon UK and Google Play Books
-- **Art Curation** — currently the curator of *Ancestors Awakening: Neolithic Treasure*, applicant for a Guinness World Records submission for what is believed to be the world's first complete set of 13 lunar moon drums
+- **Art Curation** — currently the curator of *Ancestors Awakening: Neolithic Treasure*, believed to be the world's first complete set of 13 lunar moon drums
 
 ---
 
@@ -45,15 +45,15 @@ All books illustrated using a human-in-the-loop creative process with Adobe Crea
 
 ---
 
-## Ancestors Awakening — Guinness World Record Application
+## Ancestors Awakening — A World-First Collection
 
 A three-way collaboration:
 
 - **Edwina Staniforth** — Maker (hand-crafted each of the 13 drums)
 - **Peter Yankowski** — Artist (original artwork on each drum, Ancestors Awakening series)
-- **Christopher Leece** — Curator (compiled the archive and submitted the application)
+- **Christopher Leece** — Curator (curated the set and compiled the archive)
 
-Currently pending adjudication.
+Each drum comes with its own Certificate of Authenticity.
 
 ---
 
