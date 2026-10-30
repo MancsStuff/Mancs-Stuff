@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mancs Bench Designer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Design your own restored cast iron bench with Mancs Stuff. Pick the bench ends, length, slats, colours and bolt finish and see the price as you go.">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon48x48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon512x512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon180x180.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one column of numbered build steps, with a sticky bench preview and running price beside it on wide screens and on top on phones. */
+:root {
+  --black: #1a1817; --mid: #3a3532; --mid-dark: #2a2825;
+  --offwhite: #f2ede6; --coral: #d85a30; --teal: #1d9e75; --warm-gray: #b4a99a;
+  --line: rgba(242,237,230,0.10);
+  --display: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--black); color: var(--offwhite); font-family: var(--body); font-weight: 300; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+a { color: var(--teal); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+nav.sitenav { position: relative; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid rgba(242,237,230,0.08); background: rgba(26,24,23,0.92); flex-wrap: wrap; gap: 0.5rem; }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--offwhite); text-decoration: none; }
+.nav-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; margin: 0; padding: 0; }
+.nav-links a { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--coral); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--offwhite); }
+.nav-cta { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; background: var(--coral); color: var(--black); padding: 0.6rem 1.4rem; text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
+.nav-cta:hover { opacity: 0.85; }
+@media (max-width: 820px) {
+  nav.sitenav { padding: 0.75rem 1rem; }
+  .nav-links { width: 100%; order: 3; padding-top: 0.5rem; border-top: 1px solid rgba(242,237,230,0.08); gap: 0.5rem 1rem; }
+  .nav-cta { display: none; }
+}
+
+header.hero .wrap { padding-block: 48px 28px; }
+.eyebrow { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--coral); display: flex; align-items: center; gap: 12px; margin: 0 0 14px; }
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--coral); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.92; letter-spacing: 0.02em; margin: 0 0 16px; text-wrap: balance; }
+h1 span { color: var(--coral); }
+.lede { max-width: 62ch; color: var(--warm-gray); margin: 0; }
+.lede strong { color: var(--offwhite); font-weight: 500; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; align-items: start; padding-block: 8px 64px; }
+.steps { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.step { border-top: 1px solid var(--line); padding-block: 26px; }
+.step-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+.step-num { font-family: var(--display); font-size: 2.2rem; line-height: 1; color: var(--teal); min-width: 2ch; }
+.step h2 { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; margin: 0; }
+.step .hint { font-size: 0.85rem; color: var(--warm-gray); margin: -6px 0 14px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.opt { position: relative; display: flex; flex-direction: column; gap: 4px; text-align: left; background: var(--mid-dark); border: 1px solid var(--line); color: var(--offwhite); padding: 14px; font: inherit; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.opt:hover { border-color: rgba(242,237,230,0.35); }
+.opt:focus-visible, .sw:focus-visible, .btn:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.opt[aria-pressed="true"] { border-color: var(--coral); background: #33231c; }
+.opt[aria-pressed="true"]::after { content: '✓'; position: absolute; top: 10px; right: 12px; color: var(--coral); font-weight: 500; }
+.opt:disabled { opacity: 0.35; cursor: not-allowed; }
+.opt-name { font-weight: 500; font-size: 0.98rem; padding-right: 18px; }
+.opt-meta { font-size: 0.78rem; color: var(--warm-gray); }
+.opt-price { font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.04em; color: var(--offwhite); margin-top: 2px; }
+.opt-price.q { font-family: var(--body); font-size: 0.8rem; color: var(--coral); text-transform: uppercase; letter-spacing: 0.08em; }
+.chip { display: block; width: 100%; height: 8px; margin-top: 4px; border: 1px solid rgba(242,237,230,0.2); }
+.end-photo { display: block; width: calc(100% + 28px); max-width: none; margin: -14px -14px 8px; aspect-ratio: 4 / 5; object-fit: cover; }
+.specs { list-style: none; margin: 6px 0 0; padding: 6px 0 0; border-top: 1px solid var(--line); font-size: 0.74rem; color: var(--warm-gray); display: flex; flex-direction: column; gap: 2px; }
+#ends { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.photo-thumb { position: absolute; bottom: 8px; right: 8px; width: 64px; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--offwhite); }
+.preview { position: relative; }
+.stock { font-size: 0.75rem; color: var(--teal); font-weight: 500; }
+.stock.out { color: var(--coral); }
+.made .wrap { padding-block: 0 8px; }
+.made-title { font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: 0.04em; margin: 0 0 10px; }
+.made-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+.made-strip figure { margin: 0; flex: 0 0 200px; scroll-snap-align: start; }
+.made-strip img { display: block; width: 200px; height: 200px; object-fit: cover; }
+.made-strip figcaption { font-size: 0.75rem; color: var(--warm-gray); margin-top: 4px; line-height: 1.4; }
+.opt-thumb { display: block; width: calc(100% + 28px); max-width: none; margin: -14px -14px 8px; aspect-ratio: 4 / 3; object-fit: cover; }
+.tag { display: inline-block; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); border: 1px solid var(--teal); padding: 1px 6px; margin-top: 4px; align-self: flex-start; }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.sw { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: none; color: var(--warm-gray); font: inherit; font-size: 0.75rem; cursor: pointer; padding: 4px; width: 68px; }
+.sw .dot { width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(242,237,230,0.25); }
+.sw[aria-pressed="true"] { color: var(--offwhite); }
+.sw[aria-pressed="true"] .dot { border-color: var(--coral); box-shadow: 0 0 0 3px var(--black), 0 0 0 5px var(--coral); }
+.sw:disabled { opacity: 0.3; cursor: not-allowed; }
+.sub-label { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--warm-gray); margin: 18px 0 10px; }
+
+.extra { display: flex; gap: 12px; align-items: flex-start; background: var(--mid-dark); border: 1px solid var(--line); padding: 14px; margin-bottom: 10px; cursor: pointer; }
+.extra input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--coral); margin-top: 2px; flex: none; }
+.extra-body { flex: 1; min-width: 0; }
+.extra-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.extra-name { font-weight: 500; }
+.extra-price { font-family: var(--display); font-size: 1.2rem; }
+.extra-price.q { font-family: var(--body); font-size: 0.78rem; color: var(--coral); text-transform: uppercase; letter-spacing: 0.08em; }
+.extra-desc { font-size: 0.82rem; color: var(--warm-gray); }
+.field { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.field[hidden] { display: none; }
+.extra-wrap { margin-bottom: 10px; }
+.extra-wrap .extra { margin-bottom: 0; }
+.where { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.where .opt { padding: 10px 12px; }
+.extra-wrap .field { background: var(--mid-dark); border: 1px solid var(--line); border-top: none; padding: 0 14px 14px 46px; margin-top: 0; }
+.field label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); }
+input[type=text], input[type=email], input[type=tel], textarea { width: 100%; background: var(--black); border: 1px solid rgba(242,237,230,0.2); color: var(--offwhite); font: inherit; padding: 11px 12px; border-radius: 0; }
+textarea { min-height: 90px; resize: vertical; }
+
+aside.panel { position: sticky; top: 16px; background: var(--mid-dark); border: 1px solid var(--line); min-width: 0; }
+.preview { background: radial-gradient(ellipse at 50% 90%, #3a3532 0%, #221f1d 70%); padding: 14px 10px 6px; }
+.preview svg { display: block; width: 100%; height: auto; }
+.preview-cap { font-size: 0.72rem; color: var(--warm-gray); text-align: center; padding: 4px 10px 10px; margin: 0; }
+.price-box { padding: 18px 20px 20px; }
+.lines { list-style: none; margin: 0 0 14px; padding: 0; font-size: 0.88rem; }
+.lines li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.lines li span:first-child { color: var(--warm-gray); min-width: 0; }
+.lines li span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lines .q { color: var(--coral); }
+.total-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.total-label { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm-gray); }
+.total { font-family: var(--display); font-size: 3rem; line-height: 1; letter-spacing: 0.03em; font-variant-numeric: tabular-nums; }
+.total.q { font-size: 1.9rem; color: var(--coral); }
+.deposit { font-size: 0.85rem; color: var(--warm-gray); margin: 8px 0 0; }
+.deposit strong { color: var(--offwhite); font-weight: 500; }
+.note { font-size: 0.78rem; color: var(--warm-gray); margin: 12px 0 0; line-height: 1.55; }
+.jump { display: none; }
+
+.btn { display: inline-block; background: var(--coral); color: var(--black); border: none; padding: 14px 26px; font: inherit; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; cursor: pointer; text-decoration: none; }
+.btn.ghost { background: transparent; color: var(--offwhite); border: 1px solid rgba(242,237,230,0.25); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.form-grid .full { grid-column: 1 / -1; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 0.85rem; color: var(--warm-gray); margin: 16px 0; }
+.consent input { width: 20px; height: 20px; accent-color: var(--coral); flex: none; margin-top: 2px; }
+.err { color: #ff8a65; font-size: 0.85rem; margin: 8px 0 0; }
+.sent { background: #1f2d27; border: 1px solid var(--teal); padding: 18px; margin-top: 18px; }
+.sent h3 { font-family: var(--serif); font-weight: 400; margin: 0 0 8px; font-size: 1.2rem; }
+.sent p { margin: 0 0 10px; font-size: 0.9rem; color: var(--warm-gray); }
+.sent pre { white-space: pre-wrap; word-break: break-word; background: var(--black); border: 1px solid var(--line); padding: 12px; font-size: 0.8rem; max-height: 260px; overflow: auto; margin: 0 0 12px; color: var(--offwhite); font-family: var(--body); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.email-text { user-select: all; color: var(--offwhite); font-weight: 500; }
+
+footer.sitefoot { border-top: 1px solid rgba(242,237,230,0.08); padding: 2.5rem 4rem; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; gap: 2rem; font-size: 0.72rem; color: var(--warm-gray); }
+footer.sitefoot p { margin: 0; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.12em; color: var(--offwhite); }
+.footer-right { text-align: right; }
+@media (max-width: 820px) {
+  footer.sitefoot { grid-template-columns: 1fr; text-align: center; padding: 2rem 1.5rem; }
+  .footer-right { text-align: center; }
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  aside.panel { order: -1; position: sticky; top: 0; z-index: 5; margin-bottom: 8px; }
+  .preview { padding: 6px 6px 0; }
+  .preview svg { max-height: 150px; }
+  .preview-cap { display: none; }
+  .price-box { padding: 10px 16px 12px; }
+  .lines, .note, .deposit { display: none; }
+  .total { font-size: 2.2rem; }
+  .total.q { font-size: 1.4rem; }
+  .jump { display: inline; font-size: 0.75rem; }
+}
+@media (max-width: 520px) {
+  .cards { grid-template-columns: 1fr 1fr; }
+  .end-photo { width: calc(100% + 24px); margin: -12px -12px 8px; }
+  #ends { grid-template-columns: 1fr 1fr; gap: 8px; }
+  #ends .opt-name { font-size: 0.9rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .opt { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:0;padding:0;"><img src="mancsstuff-banner.jpg" alt="Mancs Stuff" style="height:44px;width:auto;max-width:240px;display:block;"></a>
+  <ul class="nav-links">
+    <li><a href="mancs-stuff-services.html">Services</a></li>
+    <li><a href="mancs-stuff-furniture.html">Furniture</a></li>
+    <li><a href="mancs-stuff-artwork.html">Artwork</a></li>
+    <li><a href="mancs-stuff-books.html">Books</a></li>
+    <li><a href="mancs-stuff-about.html">About</a></li>
+    <li><a href="mancs-stuff-toolkit.html">Toolkit</a></li>
+    <li><a href="mailto:hello@mancsstuff.com">Contact</a></li>
+    <li><a href="mancs-stuff-red-bench.html" style="display:inline-flex;align-items:center;gap:0;padding:0;" title="The Red Bench Project — Official Partner"><img src="redbench-logo-nav.png" alt="The Red Bench Project" style="height:32px;width:auto;display:block;filter:drop-shadow(0 0 1px rgba(0,0,0,0.2));"></a></li>
+  </ul>
+  <a href="mailto:hello@mancsstuff.com" class="nav-cta">Get in touch</a>
+</nav>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Hand-restored in Oldham</p>
+  <h1>Design your<br><span>own bench.</span></h1>
+  <p class="lede">Pick real cast iron bench ends from the workshop, choose your slats and colours right down to the bolts, and watch the price build as you go. <strong>Half up front, the rest on delivery.</strong></p>
+</div></header>
+
+<section class="made" aria-labelledby="h-made"><div class="wrap">
+  <h2 id="h-made" class="made-title">Benches we've made</h2>
+  <div class="made-strip" id="gallery"></div>
+</div></section>
+
+<div class="wrap layout">
+  <div class="steps">
+
+    <section class="step" aria-labelledby="h-ends">
+      <div class="step-head"><span class="step-num">1</span><h2 id="h-ends">Bench ends</h2></div>
+      <p class="hint">Real ends from the workshop, priced per pair and painted in one colour. Sizes are in millimetres. Some take a back that you choose in step 3.</p>
+      <div class="cards" id="ends"></div>
+    </section>
+
+    <section class="step" aria-labelledby="h-len">
+      <div class="step-head"><span class="step-num">2</span><h2 id="h-len">Length</h2></div>
+      <div class="cards" id="lengths"></div>
+    </section>
+
+    <section class="step" aria-labelledby="h-slats">
+      <div class="step-head"><span class="step-num">3</span><h2 id="h-slats">Slats</h2></div>
+      <p class="hint">Priced per slat, cut and fitted with stainless bolts. Your bench ends set how many slats you need and their size, and the price works it out for you.</p>
+      <div class="cards" id="slats"></div>
+      <div id="backWrap" hidden>
+        <p class="sub-label">Back for these ends</p>
+        <div class="cards" id="backRest"></div>
+        <div id="boardColWrap" hidden>
+          <p class="sub-label">Back board colour</p>
+          <div class="swatches" id="boardCol"></div>
+        </div>
+        <div id="panelWrap" hidden>
+          <p class="sub-label">Panels in stock</p>
+          <div class="cards" id="panels"></div>
+          <p class="hint" id="panelNone">Every cast panel is one of a kind and they come in different sizes. Christopher will send you photos of the panels in stock, and the bench is built to fit the one you pick.</p>
+        </div>
+        <div class="field" id="backTextWrap" hidden><label for="f-backtext" id="backTextLabel"></label><textarea id="f-backtext" maxlength="300"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="sec-frame" aria-labelledby="h-frame">
+      <div class="step-head"><span class="step-num">4</span><h2 id="h-frame">Frame paint</h2></div>
+      <p class="sub-label">Paint finish</p>
+      <div class="cards" id="paintFinish"></div>
+      <p class="sub-label">Colour</p>
+      <div class="swatches" id="frame"></div>
+      <div class="field" id="customWrap" hidden><label for="f-custom">Which colour do you want?</label><input type="text" id="f-custom" maxlength="80" placeholder="e.g. Manchester City sky blue, or a paint code"></div>
+    </section>
+
+    <section class="step" aria-labelledby="h-detail">
+      <div class="step-head"><span class="step-num">5</span><h2 id="h-detail">Painted decoration on the ends</h2></div>
+      <p class="hint">Keep the ends one colour, or have the decoration in the cast iron painted in a second colour.</p>
+      <div id="detailWrap">
+        <div class="cards" id="detailToggle"></div>
+        <div id="detailColWrap" hidden>
+          <p class="sub-label">Decoration colour</p>
+          <div class="swatches" id="detailCol"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="h-finish">
+      <div class="step-head"><span class="step-num">6</span><h2 id="h-finish">Slat finish</h2></div>
+      <div class="cards" id="finish"></div>
+      <div id="slatPaintWrap" hidden>
+        <p class="sub-label">Slat paint colour</p>
+        <div class="swatches" id="slatPaint"></div>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="h-bolts">
+      <div class="step-head"><span class="step-num">7</span><h2 id="h-bolts">Bolt finish</h2></div>
+      <div class="swatches" id="bolts"></div>
+    </section>
+
+    <section class="step" aria-labelledby="h-extras">
+      <div class="step-head"><span class="step-num">8</span><h2 id="h-extras">Extras</h2></div>
+      <div id="extras"></div>
+    </section>
+
+    <section class="step" id="send" aria-labelledby="h-send">
+      <div class="step-head"><span class="step-num">9</span><h2 id="h-send">Send your design</h2></div>
+      <p class="hint">Christopher checks every design by hand and comes back to you with a final price and build date. Nothing is charged yet.</p>
+      <form id="enquiry" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" autocomplete="name" required></div>
+          <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" required></div>
+          <div class="field"><label for="f-phone">Phone (optional)</label><input type="tel" id="f-phone" autocomplete="tel"></div>
+          <div class="field"><label for="f-town">Town or postcode</label><input type="text" id="f-town" autocomplete="postal-code" required></div>
+          <div class="field full"><label for="f-notes">Anything else? (optional)</label><textarea id="f-notes" placeholder="Who it's for, a date you need it by, delivery details..."></textarea></div>
+        </div>
+        <label class="consent"><input type="checkbox" id="f-consent"> <span>I'm happy for Mancs Stuff to use these details to reply about this bench. They're not used for anything else. <a href="mancs-stuff-contact.html">Privacy policy</a></span></label>
+        <button type="submit" class="btn">Send my design</button>
+        <p class="err" id="formErr" hidden></p>
+      </form>
+      <div class="sent" id="sent" hidden>
+        <h3>Your design is ready to send</h3>
+        <p>Your email app should open with everything filled in. If it doesn't, copy the design below and email it to <span class="email-text">hello@mancsstuff.com</span></p>
+        <pre id="summary"></pre>
+        <div class="btn-row">
+          <button type="button" class="btn" id="copyBtn">Copy design</button>
+          <span id="copyMsg" class="opt-meta" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="panel" aria-label="Your bench">
+    <div class="preview">
+      <img class="photo-thumb" id="endThumb" alt="" hidden>
+      <svg id="bench" viewBox="0 0 400 230" role="img" aria-label="Preview of your bench"></svg>
+    </div>
+    <p class="preview-cap" id="capt"></p>
+    <div class="price-box">
+      <ul class="lines" id="lines"></ul>
+      <div class="total-row">
+        <span class="total-label">Your bench <a href="#send" class="jump">Send</a></span>
+        <span class="total" id="total">£0</span>
+      </div>
+      <p class="deposit" id="deposit"></p>
+      <p class="note">Estimated price. Christopher confirms the final price before you pay anything. Delivery is quoted separately.</p>
+    </div>
+  </aside>
+</div>
+
+<footer class="sitefoot">
+  <span class="footer-logo"><img src="mancsstuff-logo.jpg" alt="Mancs Stuff" style="height:32px;width:auto;display:block;"></span>
+  <div class="footer-right">
+    <p>© 2026 Mancs Stuff Ltd.</p>
+    <p style="margin-top:4px;">Oldham, Greater Manchester</p>
+  </div>
+  <div class="footer-legal" style="padding:1.25rem 4rem;background:rgba(0,0,0,0.2);border-top:1px solid rgba(242,237,230,0.06);">
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-bottom:3px;"><strong style="color:rgba(180,169,154,0.85);">Mancsstuff Ltd</strong> | Registered in England and Wales | Company Number: <strong style="color:rgba(180,169,154,0.85);">16178518</strong></p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-bottom:3px;">Registered Office: B8, East Northdown Business Centre, George Hill Road, Thanet, CT9 3FF</p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-top:6px;font-style:italic;">This website is operated by Christopher Leece as a Sole Trader. This website is operated by Christopher Leece. Mancsstuff Ltd is currently a dormant entity. Handyman services and furniture restoration are provided by Christopher Leece as a Sole Trader (t/a ChrisCanHandyman). Mancsstuff Ltd holds no liability for manual works undertaken by the sole trader.</p>
+    <p style="font-size:0.68rem;color:rgba(180,169,154,0.6);line-height:1.7;margin-top:8px;">© 2026 Christopher Leece / Mancsstuff Ltd. All rights reserved. | <a href="mancs-stuff-legal.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Legal &amp; Copyright</a> | <a href="mancs-stuff-contact.html" style="color:rgba(180,169,154,0.6);text-decoration:none;">Privacy Policy</a></p>
+  </div>
+</footer>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#2a2825;border-top:1px solid rgba(242,237,230,0.12);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+  <p style="font-size:0.8rem;color:#b4a99a;line-height:1.6;max-width:700px;margin:0;">
+    This website does not use tracking or advertising cookies. We only use a session cookie to remember your cookie preference.
+    See our <a href="mancs-stuff-legal.html" style="color:#1d9e75;text-decoration:none;">Privacy Policy</a> for details.
+  </p>
+  <button onclick="acceptCookies()" style="background:#d85a30;color:#1a1817;border:none;padding:0.6rem 1.5rem;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Got it</button>
+</div>
+<script>
+function acceptCookies(){
+  document.getElementById('cookieBanner').style.display='none';
+  localStorage.setItem('cookieAccepted','true');
+}
+window.addEventListener('load',function(){
+  if(!localStorage.getItem('cookieAccepted')){
+    document.getElementById('cookieBanner').style.display='flex';
+  }
+});
+</script>
+
+<script>
+/* pairs: number of pairs in stock (null = in stock, number not counted yet, 0 = sold out). photo: image file next to this page */
+/* ===== PRICE LIST: change prices here (matches Mancs-Bench-Price-List.xlsx). null = quote required ===== */
+const DATA = {
+  labourAdult: 150, labourKids: 100,
+  flatBar: 6,
+  paintFinishes: [
+    { id:'brush', name:'Standard brush paint', price:0, meta:'Rust-Oleum or Painter\'s Touch, hand brushed' },
+    { id:'spray', name:'Spray enamel', price:35, meta:'Smoother finish, sprayed from cans' },
+    { id:'powder', name:'Sandblasted and powder coated', price:130, meta:'Toughest finish. Adds about a week' }
+  ],
+  backRests: [
+    { id:'wide', name:'Two wide back slats', price:20, meta:'Two 100 to 150 mm slats, trimmed to fit', photo:'made-leaf-heart-green-wide-slats.jpg' },
+    { id:'plain', name:'Plain painted back board', price:50, meta:'Solid board between two slats, one colour', colour:true, photo:'made-plain-board-example.jpg' },
+    { id:'design', name:'Hand-painted design back board', price:100, meta:'Your design painted by hand, like the MCR Bee', photo:'made-mcr-bee-kids-bench.jpg', input:'What design do you want on the back?' },
+    { id:'cast', name:'Decorative cast iron back panel', price:100, meta:'One-of-a-kind panels, hand painted. Photo is an example', photo:'made-roses-cast-back-panel.jpg', input:'Any colours you\'d like on the panel?' }
+  ],
+  /* Cast iron back panels in stock. Each is one of a kind. Add one line per panel:
+     { id:'PANEL-01', name:'Roses and hummingbirds', photo:'panel-roses.jpg', width:1100, height:300, stock:1, price:100 } */
+  castPanels: [],
+  gallery: [
+    ['made-leaf-heart-green-wide-slats.jpg', 'Leaf & Heart ends in green, two wide back slats'],
+    ['made-mcr-bee-kids-bench.jpg', 'MCR Bee kids bench, hand-painted back board'],
+    ['made-sunflower-rosette-yellow.jpg', 'Sunflower Rosette ends, decoration painted yellow'],
+    ['made-lion-head-bronze.jpg', 'Lion Head ends in bronze, message on the back slat'],
+    ['made-roses-cast-back-panel.jpg', 'Cast back panel, flowers and birds painted by hand'],
+    ['made-sunflower-rosette-black.jpg', 'Sunflower Rosette ends in black, pine slats'],
+    ['made-kids-personalised.jpg', 'Personalised kids bench with a name on the back'],
+    ['made-mcr-bee-sign.jpg', 'Hand-painted MCR Bee back board'],
+    ['made-podcast-sign.jpg', 'Hand-painted sign back board in progress']
+  ],
+  slatPaint: { brush:20, spray:30, powder:20 },  /* extra paint for painted slats; slats are never powder coated */  /* each; 3 bars up to 1,000 mm, 4 bars on 5 ft and 6 ft */
+  slatPrices: 'per slat',
+  /* colour charges: name -> extra £ (all included in labour today) */
+  frameCharge: {}, finishCharge: {}, boltCharge: {}, depositPct: 50, roundTo: 5, email: 'hello@mancsstuff.com',
+  ends: [
+    { id:'END-01', name:'Leaf & Heart Adult', kind:'adult', price:70, pairs:3, photo:'bench-end-leaf-heart-adult.jpg', motif:'leaf', material:'Steel',
+      seat:'370 to 400 mm, slightly curved', back:'800 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:7, backRest:true, pattern:25 },
+    { id:'END-02', name:'Leaf & Heart Adult, low seat', kind:'adult', price:70, pairs:1, photo:'bench-end-leaf-heart-adult-low-seat.jpg', motif:'leaf', material:'Steel',
+      seat:'360 to 380 mm, curved', back:'800 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:7, backRest:true, pattern:25 },
+    { id:'END-03', name:'Leaf & Heart Teen', kind:'kids', price:60, pairs:1, photo:'bench-end-leaf-heart-teen.jpg', motif:'leaf', material:'Cast iron',
+      seat:'370 to 390 mm, curved', back:'770 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:7, backRest:true, pattern:25 },
+    { id:'END-04', name:'Leaf & Heart Kids or Teen', kind:'kids', price:70, pairs:1, photo:'bench-end-leaf-heart-kids-teen.jpg', motif:'leaf', material:'Steel',
+      seat:'340 mm', back:'740 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:7, backRest:true, pattern:25 },
+    { id:'END-05', name:'Leaf & Heart Small Kids', kind:'kids', price:60, pairs:5, photo:'bench-end-leaf-heart-small-kids.jpg', motif:'leaf', material:'Cast iron',
+      seat:'350 to 390 mm, curved', back:'740 mm', width:'500 mm', slatSize:'60 × 20 mm', slats:7, backRest:true, pattern:25 },
+    { id:'END-06', name:'Ladder Back Scroll Kids', kind:'kids', price:40, pairs:12, photo:'bench-end-ladder-back-scroll-kids.jpg', motif:'ladder', material:'Cast iron',
+      seat:'330 mm', back:'700 mm', width:'500 mm', slatSize:'70 × 30 mm', slats:8, pattern:25, extra:{ name:'Trimming slats to fit', price:30 } },
+    { id:'END-07', name:'Edwardian Park', kind:'adult', price:150, pairs:1, photo:'bench-end-edwardian-park.jpg', motif:'edwardian', material:'Steel', rare:true,
+      seat:'400 mm', back:'830 mm', width:'610 mm', slatSize:'60 × 20 mm', slats:11, pattern:25, extra:{ name:'2 handle slats', price:30 } },
+    { id:'END-08', name:'Sunflower Rosette', kind:'any', price:100, pairs:2, photo:'bench-end-sunflower-rosette.jpg', motif:'rosette', material:'Possibly cast iron', rare:true,
+      seat:'350 to 380 mm, slight curve', back:'710 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:12, pattern:50, note:'Teen, child or low adult seat. 1 pair already restored' },
+    { id:'END-09', name:'Lion Head', kind:'adult', price:100, pairs:4, photo:'bench-end-lion-head.jpg', motif:'lion', material:'Steel, possibly cast iron', rare:true,
+      seat:'350 to 400 mm, curved', back:'780 mm', width:'600 mm', slatSize:'60 × 20 or 60 × 30 mm', slats:12, pattern:50 },
+    { id:'END-10', name:'Shell & Feather (Coalbrookdale style)', kind:'adult', price:200, pairs:null, photo:'bench-end-shell-feather.jpg', motif:'shell', material:'Cast iron', rare:true,
+      seat:'390 to 400 mm', back:'800 mm', width:'600 mm', slatSize:'60 × 20 mm', slats:12, pattern:50, note:'Very rare. Sizes approximate' },
+    { id:'END-11', name:'Victorian Scroll Kids', kind:'kids', price:60, pairs:10, photo:'bench-end-victorian-scroll-loose.jpg', motif:'scroll', material:'Cast iron',
+      slats:null, pattern:25, note:'Kid size. Slat count confirmed on quote' }
+  ],
+  lengths: [
+    { id:'chair', name:'Chair', mm:457, kind:'adult', meta:'1 ft 6, 457 mm · one seat' },
+    { id:'2ft', name:'2 ft', mm:610, kind:'adult', meta:'610 mm · small bench' },
+    { id:'3ft', name:'3 ft', mm:914, kind:'adult', meta:'914 mm · fits two' },
+    { id:'5ft', name:'5 ft', mm:1500, kind:'adult', meta:'1,500 mm · fits three' },
+    { id:'6ft', name:'6 ft', mm:1800, kind:'adult', meta:'1,800 mm · fits four' },
+    { id:'kids', name:'Kids', mm:1000, kind:'kids', meta:'1,000 mm · kids ends only' },
+    { id:'custom', name:'Custom', mm:1500, kind:'any', meta:'Tell us the size', quote:true }
+  ],
+  slats: [
+    { id:'SLAT-01', name:'Reclaimed oak', price:{ chair:4, '2ft':4, '3ft':6, kids:6, '5ft':8, '6ft':8 }, material:'timber', meta:'Character marks, full of history', colour:'#8a6440' },
+    { id:'SLAT-02', name:'New oak', price:{ chair:6, '2ft':7, '3ft':11, kids:11, '5ft':16, '6ft':16 }, material:'timber', meta:'Clean, fresh finish', colour:'#c49a64' },
+    { id:'SLAT-03', name:'Kedel recycled plastic', price:{ chair:7, '2ft':9, '3ft':13, kids:14, '5ft':20, '6ft':23 }, material:'plastic', meta:'No rot, no splinters', colour:'#5c5249' }
+  ],
+  frame: [
+    ['Black','#1c1c1c'],['Red','#c0262d'],['Burgundy','#6d1a2a'],['Orange','#e8742a'],['Yellow','#f2c230'],
+    ['Gold','#c9a24a'],['Cream','#efe4c8'],['White','#f2efe9'],['Silver','#b9bec4'],['Grey','#6e7074'],
+    ['Bronze','#8c6a3f'],['Copper','#b8693d'],['Forest green','#24452c'],['Green','#2f8a44'],['Teal','#1d9e9a'],
+    ['Sky blue','#6fb7e0'],['Royal blue','#2346a8'],['Navy','#1d2a4a'],['Purple','#6a3d8f'],['Pink','#e27fa8'],
+    ['Custom colour (tell us)','custom']
+  ],
+  finishes: [
+    { id:'clear', name:'Clear varnish', material:'timber', meta:'Shows the natural grain' },
+    { id:'loak', name:'Light oak varnish', material:'timber', hex:'#c08a4e' },
+    { id:'moak', name:'Medium oak varnish', material:'timber', hex:'#9a6634' },
+    { id:'doak', name:'Dark oak varnish', material:'timber', hex:'#6b4426' },
+    { id:'pine', name:'Antique pine varnish', material:'timber', hex:'#b5793a' },
+    { id:'teak', name:'Teak varnish', material:'timber', hex:'#8f5a2b' },
+    { id:'walnut', name:'Walnut varnish', material:'timber', hex:'#5e3b22' },
+    { id:'mahog', name:'Mahogany varnish', material:'timber', hex:'#6e2b1d' },
+    { id:'ebony', name:'Ebony varnish', material:'timber', hex:'#2b211c' },
+    { id:'paint', name:'Coloured (painted)', material:'timber', meta:'Pick a paint colour' },
+    { id:'none', name:'No finish (plastic slats)', material:'plastic', meta:'Plastic slats need no varnish' }
+  ],
+  bolts: [['Black','#111111'],['Stainless steel','#d9dde0'],['Silver','#b9bec4'],['Gold','#d4a843'],['Brass','#c8a250'],['Bronze','#8c6a3f'],
+    ['Copper','#b8693d'],['Red','#c0262d'],['Royal blue','#2346a8'],['Green','#2f8a44'],['White','#f2efe9'],['Pink','#e27fa8'],
+    ['Match the frame colour','frame'],['Match the decoration colour','detail']],
+  extras: [
+    { id:'EXT-01', name:'Hand-painted design sign', price:115, desc:'A hand-painted sign fixed to the front of the bench, like the Manchester Bee.',
+      input:{ label:'What design do you want?', placeholder:'e.g. a Manchester Bee, a football badge, flowers, your house name', long:true } },
+    { id:'EXT-02', name:'Name or message', price:null, desc:'Personalised lettering for your bench.',
+      input:{ label:'What should it say?', placeholder:"e.g. Nan's Bench" },
+      where:['On the back slat', 'On a plaque', 'On the front sign'] },
+    { id:'EXT-03', name:'Memorial bench', price:null, desc:'A bench made in memory of someone. Christopher will talk it through with you.',
+      input:{ label:'What would you like on it, and where?', placeholder:'e.g. In loving memory of Jim, 1948 to 2025, on a brass plaque on the back', long:true } }
+  ]
+};
+/* ===== END OF PRICE LIST ===== */
+
+const S = { panel:null, backRest:'wide', boardColour:'Black', backText:{}, paintFinish:'brush', end:'END-01', len:'5ft', slat:'SLAT-02', frame:'Black', finish:'clear', slatPaint:'Green', bolts:'Stainless steel', extras:{}, text:{}, where:{}, detailOn:false, detail:'Gold', customColour:'' };
+const $ = id => document.getElementById(id);
+const gbp = n => '£' + n.toLocaleString('en-GB', n % 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {});
+const byId = (list, id) => list.find(x => x.id === id);
+const frameHex = n => { const h = (DATA.frame.find(f => f[0] === n) || DATA.frame[0])[1]; return h === 'custom' ? '#8a8580' : h; };
+const RAINBOW = 'conic-gradient(#c0262d, #f2c230, #2f8a44, #2346a8, #6a3d8f, #c0262d)';
+const detailOn = () => !!S.detailOn;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function priceKey(){ return S.len === 'custom' ? null : S.len; }
+
+function calc(){
+  const end = byId(DATA.ends, S.end), len = byId(DATA.lengths, S.len), slat = byId(DATA.slats, S.slat);
+  const kids = end.kind === 'kids';
+  const per = slat.price && priceKey() ? slat.price[priceKey()] : null;
+  const lines = []; let quote = false, sum = 0;
+  const add = (label, v) => { if (v === null || v === undefined) { quote = true; lines.push([label, null]); } else { sum += v; lines.push([label, v]); } };
+  add('Bench ends: ' + end.name, end.price);
+  if (len.quote) { quote = true; lines.push(['Length: custom', null]); }
+  if (!len.quote) add(end.slats ? `Slats: ${end.slats} × ${slat.name}` : 'Slats: ' + slat.name, end.slats && per !== null ? end.slats * per : null);
+  if (!len.quote) { const bars = len.mm <= 1000 ? 3 : 4; add(`Flat bars: ${bars} × ${gbp(DATA.flatBar)}`, bars * DATA.flatBar); }
+  if (end.extra) add(end.extra.name, end.extra.price);
+  if (end.backRest) { const br = byId(DATA.backRests, S.backRest); const pn = br.id === 'cast' && S.panel ? byId(DATA.castPanels, S.panel) : null;
+    add('Back: ' + (pn ? pn.name + ' panel' : br.name), pn && pn.price != null ? pn.price : br.price); }
+  add('Restoring, painting, assembly', kids ? DATA.labourKids : DATA.labourAdult);
+  const fc = DATA.frameCharge[S.frame] || 0, sc = DATA.finishCharge[S.finish] || 0, bc = DATA.boltCharge[S.bolts] || 0;
+  if (fc) add('Frame colour: ' + S.frame, fc);
+  const pf = byId(DATA.paintFinishes, S.paintFinish);
+  if (pf.price) add(pf.name, pf.price);
+  if (S.finish === 'paint') add('Painting the slats', DATA.slatPaint[S.paintFinish]);
+  if (detailOn()) add('Decoration painted ' + S.detail, end.pattern);
+  if (sc) add('Slat finish', sc);
+  if (bc) add('Bolts: ' + S.bolts, bc);
+  DATA.extras.forEach(x => { if (S.extras[x.id]) add(x.name, x.price); });
+  const total = Math.ceil(sum / DATA.roundTo) * DATA.roundTo;
+  return { lines, quote, total, end, len, slat, kids };
+}
+
+function optBtn(o, pressed, disabled, priceHtml){
+  return `<button type="button" class="opt" data-id="${o.id}" aria-pressed="${pressed}" ${disabled ? 'disabled' : ''}>
+    <span class="opt-name">${esc(o.name)}</span><span class="opt-meta">${esc(o.meta || '')}</span>${priceHtml || ''}${o.oneOff ? '<span class="tag">One-off pair</span>' : ''}</button>`;
+}
+const priceTag = v => v === null || v === undefined ? '<span class="opt-price q">Quote required</span>' : `<span class="opt-price">${gbp(v)}</span>`;
+function swatch(name, hex, pressed, disabled){
+  const bg = hex === 'frame' ? `conic-gradient(${frameHex(S.frame)} 0 50%, #555 0)` : hex === 'detail' ? `conic-gradient(${frameHex(S.detail)} 0 50%, #555 0)` : hex === 'custom' ? RAINBOW : hex;
+  return `<button type="button" class="sw" data-id="${esc(name)}" aria-pressed="${pressed}" ${disabled ? 'disabled' : ''}><span class="dot" style="background:${bg}"></span>${esc(name)}</button>`;
+}
+
+function render(){
+  const c = calc();
+  // enforce compatibility
+  $('ends').innerHTML = DATA.ends.map(e => {
+    const out = e.pairs === 0;
+    const stock = out ? '<span class="stock out">Sold out</span>' : e.pairs ? `<span class="stock">${e.pairs} ${e.pairs === 1 ? 'pair' : 'pairs'} left</span>` : '<span class="stock">In stock</span>';
+    const img = e.photo ? `<img class="end-photo" src="${e.photo}" alt="${esc(e.name)} cast iron bench ends in the workshop" loading="lazy">` : '';
+    const specs = [e.seat ? 'Seat ' + e.seat : '', e.back ? 'Back ' + e.back : '', e.width ? 'Width ' + e.width : '',
+      e.slats ? `${e.slats} slats, ${e.slatSize}` + (e.backRest ? ', back to choose' : '') : '', e.material, e.note || ''].filter(Boolean);
+    const card = Object.assign({}, e, { meta: '' });
+    return optBtn(card, e.id === S.end, out, priceTag(e.price) + '<span class="opt-meta">per pair, painted one colour</span>' + stock
+      + `<ul class="specs">${specs.map(s => `<li>${esc(s)}</li>`).join('')}</ul>` + (e.rare ? '<span class="tag">Rare</span>' : ''))
+      .replace('<span class="opt-name">', img + '<span class="opt-name">');
+  }).join('');
+  $('lengths').innerHTML = DATA.lengths.map(l => {
+    const ok = l.kind === 'any' || c.end.kind !== 'adult' || l.kind === 'adult';
+    return optBtn(l, l.id === S.len, !ok, l.quote ? '<span class="opt-price q">Quote required</span>' : '');
+  }).join('');
+  $('slats').innerHTML = DATA.slats.map(s => optBtn(s, s.id === S.slat, false, priceKey() ? `<span class="opt-price">${gbp(s.price[priceKey()])}</span><span class="opt-meta">per slat at this length</span>` : '<span class="opt-price q">Quote required</span>')).join('');
+  $('backWrap').hidden = !c.end.backRest;
+  $('backRest').innerHTML = DATA.backRests.map(b => optBtn(b, b.id === S.backRest, false, `<span class="opt-price">+${gbp(b.price)}</span>`)
+    .replace('<span class="opt-name">', (b.photo ? `<img class="opt-thumb" src="${b.photo}" alt="Example: ${esc(b.name)}" loading="lazy">` : '') + '<span class="opt-name">')).join('');
+  const brSel = byId(DATA.backRests, S.backRest);
+  $('boardColWrap').hidden = !brSel.colour;
+  $('boardCol').innerHTML = DATA.frame.filter(f => f[1] !== 'custom').map(f => swatch(f[0], f[1], f[0] === S.boardColour, false)).join('');
+  const isCast = S.backRest === 'cast';
+  $('panelWrap').hidden = !isCast;
+  $('panels').innerHTML = DATA.castPanels.map(p => {
+    const out = p.stock === 0;
+    const card = { id: p.id, name: p.name, meta: (p.width && p.height ? `${p.width} × ${p.height} mm` : '') };
+    return optBtn(card, p.id === S.panel, out, (out ? '<span class="stock out">Sold out</span>' : '<span class="stock">One in stock</span>'))
+      .replace('<span class="opt-name">', (p.photo ? `<img class="opt-thumb" src="${p.photo}" alt="${esc(p.name)} cast iron back panel" loading="lazy">` : '') + '<span class="opt-name">');
+  }).join('');
+  $('panels').hidden = !DATA.castPanels.length;
+  $('panelNone').textContent = DATA.castPanels.length ? 'Each panel is one of a kind and sizes vary, so the bench is built to fit the panel you pick.' : 'Every cast panel is one of a kind and they come in different sizes. Christopher will send you photos of the panels in stock, and the bench is built to fit the one you pick.';
+  $('backTextWrap').hidden = !brSel.input;
+  if (brSel.input) { $('backTextLabel').textContent = brSel.input; const ta = $('f-backtext'); if (document.activeElement !== ta) ta.value = S.backText[S.backRest] || ''; }
+  $('paintFinish').innerHTML = DATA.paintFinishes.map(p => optBtn(p, p.id === S.paintFinish, false, p.price ? `<span class="opt-price">+${gbp(p.price)}</span>` : '<span class="opt-meta">Included</span>')).join('');
+  $('frame').innerHTML = DATA.frame.map(f => swatch(f[0], f[1], f[0] === S.frame, false)).join('');
+  $('finish').innerHTML = DATA.finishes.map(f => optBtn(Object.assign({ meta: '' }, f), f.id === S.finish, f.material !== c.slat.material, (f.hex ? `<span class="chip" style="background:${f.hex}"></span>` : '') + (f.id === 'paint' ? `<span class="opt-price">+${gbp(DATA.slatPaint[S.paintFinish])}</span>` : '<span class="opt-meta">Included</span>'))).join('');
+  $('slatPaintWrap').hidden = S.finish !== 'paint';
+  $('slatPaint').innerHTML = DATA.frame.map(f => swatch(f[0], f[1], f[0] === S.slatPaint, false)).join('');
+  const end = c.end;
+  $('detailToggle').innerHTML = [
+    { id:'one', name:'Not painted', meta:'Same colour as the frame all over' },
+    { id:'two', name:'Paint the decoration', meta:'Decoration picked out in a second colour' }
+  ].map(o => optBtn(o, (o.id === 'two') === !!S.detailOn, false, (o.id === 'two' ? `<span class="opt-price">+${gbp(c.end.pattern)}</span><span class="opt-meta">for ${esc(c.end.name)}</span>` : '<span class="opt-meta">Included</span>'))).join('');
+  $('detailColWrap').hidden = !detailOn();
+  $('detailCol').innerHTML = DATA.frame.map(f => swatch(f[0], f[1], f[0] === S.detail, false)).join('');
+  const usesCustom = [S.frame, detailOn() ? S.detail : '', S.finish === 'paint' ? S.slatPaint : ''].includes('Custom colour (tell us)');
+  $('customWrap').hidden = !usesCustom;
+  const CU = 'Custom colour (tell us)';
+  const home = (S.finish === 'paint' && S.slatPaint === CU && S.frame !== CU && !(detailOn() && S.detail === CU)) ? $('slatPaintWrap') : $('sec-frame');
+  if ($('customWrap').parentNode !== home) home.appendChild($('customWrap'));
+  if (S.bolts === 'Match the decoration colour' && !detailOn()) S.bolts = 'Match the frame colour';
+  $('bolts').innerHTML = DATA.bolts.map(b => swatch(b[0], b[1], b[0] === S.bolts, b[1] === 'detail' && !detailOn())).join('');
+
+  // price panel
+  $('lines').innerHTML = c.lines.map(([l, v]) => `<li><span>${esc(l)}</span><span class="${v === null ? 'q' : ''}">${v === null ? 'Quote' : gbp(v)}</span></li>`).join('');
+  const t = $('total');
+  if (c.quote) { t.textContent = 'Quote required'; t.classList.add('q');
+    $('deposit').innerHTML = c.total > 0 ? `From <strong>${gbp(c.total)}</strong> plus the parts marked quote. Christopher will price those for you.` : 'Christopher will price this one for you.';
+  } else { t.textContent = gbp(c.total); t.classList.remove('q');
+    const dep = Math.round(c.total * DATA.depositPct) / 100;
+    $('deposit').innerHTML = `<strong>${gbp(dep)}</strong> deposit, <strong>${gbp(c.total - dep)}</strong> on delivery`;
+  }
+  $('capt').textContent = `${c.end.name} · ${c.len.name} · ${c.slat.name} · ${S.frame} frame` + (detailOn() ? ` · ${S.detail} decoration` : '');
+  const th = $('endThumb'); if (c.end.photo) { if (th.getAttribute('src') !== c.end.photo) th.src = c.end.photo; th.alt = c.end.name + ' bench ends'; th.hidden = false; } else th.hidden = true;
+  drawBench(c);
+}
+
+const nums = s => (String(s || '').match(/\d+/g) || []).map(Number);
+function dims(e){
+  const sn = nums(e.seat), bn = nums(e.back), wn = nums(e.width);
+  const kid = e.kind === 'kids';
+  return {
+    S: sn.length ? (sn.length > 1 ? (sn[0] + sn[1]) / 2 : sn[0]) : (kid ? 350 : 400),
+    B: bn.length ? bn[0] : (kid ? 740 : 800),
+    W: wn.length ? wn[0] : (kid ? 500 : 600)
+  };
+}
+
+function drawBench(c){
+  const frame = frameHex(S.frame);
+  const det = detailOn() ? frameHex(S.detail) : frame;
+  const boltHex = S.bolts === 'Match the frame colour' ? frame : S.bolts === 'Match the decoration colour' ? det : (DATA.bolts.find(b => b[0] === S.bolts) || ['', '#c8ccd0'])[1];
+  let slatHex = c.slat.colour;
+  const fin = byId(DATA.finishes, S.finish); if (fin && fin.hex) slatHex = fin.hex;
+  if (S.finish === 'paint') slatHex = frameHex(S.slatPaint);
+  const e = c.end, D = dims(e);
+  const len = c.len.mm;
+  const dx = Math.max(12, 70 + (len - 900) / 900 * 120), dy = dx * 0.32;   // bench length shown in perspective
+  const ground = 222;
+  const sc = Math.min(0.215, (ground - dy - 12) / (D.B + 20), (380 - dx) / (D.W * 1.1));   // px per mm, shrinks so it always fits
+  const ox = Math.round((400 - (D.W * sc + dx)) / 2);
+  const P = (o, x, y) => [(o.x + x * sc).toFixed(1), (o.y - y * sc).toFixed(1)];
+  const near = { x: ox, y: ground }, far = { x: ox + dx, y: ground - dy };
+  const total = e.slats || 7;
+  const backN = e.backRest ? 2 : Math.max(2, Math.round(total * 0.42));
+  const seatN = total - backN;
+  const slatW = (e.slatSize && e.slatSize.startsWith('70') ? 70 : 60);
+  const geo = endGeo(D);
+  let s = `<ellipse cx="${ox + (D.W * sc + dx) / 2}" cy="${ground - dy / 2 + 2}" rx="${(D.W * sc + dx) / 2}" ry="${dy / 2 + 5}" fill="rgba(0,0,0,0.25)"/>`;
+  s += endFrame(far, D, geo, e.motif, frame, det, slatHex, sc, 0.8);
+  // slat helper: a bar running from the near end to the far end
+  const bar = (pt, ux, uy, wmm, fill, extra) => {
+    const [ax, ay] = P(near, pt[0], pt[1]);
+    const bx = +ax + ux * wmm * sc, by = +ay - uy * wmm * sc;
+    return `<polygon points="${ax},${ay} ${bx},${by} ${bx + dx},${by - dy} ${+ax + dx},${ay - dy}" fill="${fill}" stroke="rgba(0,0,0,0.4)" stroke-width="0.8" ${extra || ''}/>`;
+  };
+  const bolts = [];
+  // back slats along the upright
+  const bu = geo.backLine;   // [from, to] in mm
+  const bvx = bu[1][0] - bu[0][0], bvy = bu[1][1] - bu[0][1], bl = Math.hypot(bvx, bvy), ux = bvx / bl, uy = bvy / bl;
+  const backPts = [];
+  const br = e.backRest ? S.backRest : null;
+  if (br === 'wide') {
+    backPts.push(0.06, 0.5);
+  } else if (br) {
+    backPts.push(0.04, 0.86);
+  } else {
+    for (let i = 0; i < backN; i++) backPts.push(0.04 + i * (0.82 / Math.max(1, backN - 1)));
+  }
+  const bpos = t => [bu[0][0] + bvx * t, bu[0][1] + bvy * t];
+  const backW = br === 'wide' ? Math.min(150, bl * 0.42) : slatW;
+  if (br && br !== 'wide') {
+    const a = bpos(0.04 + slatW / bl), b = bpos(0.86);
+    const [ax, ay] = P(near, a[0], a[1]), [bx, by] = P(near, b[0], b[1]);
+    const fillB = br === 'plain' ? frameHex(S.boardColour) : br === 'design' ? '#c0262d' : '#1c1c1c';
+    s += `<polygon points="${ax},${ay} ${bx},${by} ${+bx + dx},${by - dy} ${+ax + dx},${ay - dy}" fill="${fillB}" stroke="rgba(0,0,0,0.5)" stroke-width="0.8"/>`;
+    const mx = (+ax + +bx) / 2 + dx * 0.5, my = (+ay + +by) / 2 - dy * 0.5, rot = (-Math.atan2(dy, dx) * 180 / Math.PI).toFixed(1);
+    if (br === 'design') s += `<text x="${mx}" y="${my + 3}" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="9" fill="#f2c230" transform="rotate(${rot} ${mx} ${my})">YOUR DESIGN</text>`;
+    if (br === 'cast') {
+      for (let i = 0; i < 5; i++) { const t = 0.15 + i * 0.17, fx = +ax + (+bx - +ax) * 0.5 + dx * t, fy = +ay + (+by - +ay) * 0.5 - dy * t;
+        s += `<circle cx="${fx.toFixed(1)}" cy="${fy.toFixed(1)}" r="2.6" fill="${i % 2 ? '#c0262d' : '#f2c230'}"/><path d="M ${(fx - 5).toFixed(1)} ${(fy + 4).toFixed(1)} q 5 -6 10 0" fill="none" stroke="#2f8a44" stroke-width="1.2"/>`; }
+    }
+  }
+  backPts.forEach(t => { const p = bpos(t); s += bar(p, ux, uy, backW, slatHex); bolts.push(P(near, p[0] + ux * backW / 2, p[1] + uy * backW / 2)); });
+  // name on the back
+  if (S.extras['EXT-02'] && (S.where['EXT-02'] || 'On the back slat') === 'On the back slat') {
+    const p = bpos(backPts[backPts.length - 1]); const [ax, ay] = P(near, p[0] + ux * backW / 2, p[1] + uy * backW / 2);
+    const mx = +ax + dx / 2, my = +ay - dy / 2;
+    s += `<text x="${mx}" y="${my + 3}" text-anchor="middle" font-family="DM Serif Display, Georgia, serif" font-size="9" fill="#f2ede6" stroke="rgba(0,0,0,0.6)" stroke-width="2" paint-order="stroke" transform="rotate(${(-Math.atan2(dy, dx) * 180 / Math.PI).toFixed(1)} ${mx} ${my})">${esc((S.text['EXT-02'] || 'Your words').slice(0, 22))}</text>`;
+  }
+  // seat slats
+  const sl = geo.seatLine, svx = sl[1][0] - sl[0][0], svy = sl[1][1] - sl[0][1], sL = Math.hypot(svx, svy);
+  for (let i = 0; i < seatN; i++) {
+    const t = seatN === 1 ? 0.5 : i / (seatN - 1) * (1 - slatW / sL);
+    const p = [sl[0][0] + svx * t, sl[0][1] + svy * t + 20];
+    s += bar(p, svx / sL, svy / sL, slatW, slatHex);
+    bolts.push(P(near, p[0] + svx / sL * slatW / 2, p[1]));
+  }
+  // design sign on the front
+  if (S.extras['EXT-01']) {
+    const p = P(near, D.W * 0.9, D.S - 40); const sx = +p[0] + dx * 0.5, sy = +p[1] - dy * 0.5;
+    s += `<g transform="translate(${sx} ${sy}) skewY(${(-Math.atan2(dy, dx) * 180 / Math.PI).toFixed(1)})"><rect x="-26" y="0" width="52" height="18" rx="2" fill="#f2c230" stroke="#1a1817" stroke-width="1.2"/><text x="0" y="12.5" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="10" fill="#1a1817">YOUR DESIGN</text></g>`;
+  }
+  s += endFrame(near, D, geo, e.motif, frame, det, slatHex, sc, 1);
+  bolts.forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="1.9" fill="${boltHex}" stroke="rgba(0,0,0,0.6)" stroke-width="0.6"/>`; });
+  $('bench').innerHTML = s;
+}
+
+/* Side profile of a bench end, in mm: x runs back to front, y runs up from the ground */
+function endGeo(D){
+  const W = D.W, S = D.S, B = D.B;
+  return {
+    backFoot: [W * 0.1, 0], frontFoot: [W * 0.88, 0],
+    seatBack: [W * 0.2, S], seatFront: [W * 0.96, S + 8],
+    backTop: [-W * 0.06, B],
+    armStart: [W * 0.06, S + Math.min(240, (B - S) * 0.55)], armEnd: [W * 0.93, S + Math.min(215, (B - S) * 0.5)],
+    backLine: [[W * 0.17, S + 40], [-W * 0.03, B - 25]],
+    seatLine: [[W * 0.2, S], [W * 0.95, S + 8]]
+  };
+}
+
+function endFrame(o, D, g, motif, fill, dc, slatHex, sc, shade){
+  const P = (x, y) => `${(o.x + x * sc).toFixed(1)} ${(o.y - y * sc).toFixed(1)}`;
+  const W = D.W, S = D.S;
+  const tube = motif === 'edwardian';
+  const sw = (tube ? 13 : 17) * sc * (shade < 1 ? 0.9 : 1);
+  const st = `fill="none" stroke="${fill}" stroke-width="${sw.toFixed(1)}" stroke-linecap="round" stroke-linejoin="round"`;
+  const ds = `fill="none" stroke="${dc}" stroke-width="${(sw * 0.55).toFixed(1)}" stroke-linecap="round"`;
+  const dim = shade < 1 ? ' opacity="0.72"' : '';
+  let s = `<g${dim}>`;
+  const halo = `fill="none" stroke="rgba(242,237,230,0.22)" stroke-width="${(sw + 2).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round"`;
+  s += `<path d="M ${P(...g.backFoot)} Q ${P(W * 0.24, S * 0.5)} ${P(...g.seatBack)} Q ${P(W * 0.12, (S + D.B) / 2)} ${P(...g.backTop)} M ${P(...g.frontFoot)} Q ${P(W * 0.78, S * 0.5)} ${P(W * 0.84, S)} L ${P(W * 0.88, g.armEnd[1] - 10)} M ${P(...g.seatBack)} Q ${P(W * 0.58, S - 28)} ${P(...g.seatFront)} M ${P(...g.armStart)} Q ${P(W * 0.5, g.armStart[1] + 25)} ${P(...g.armEnd)}" ${halo}/>`;
+  // rear leg and back upright
+  s += `<path d="M ${P(...g.backFoot)} Q ${P(W * 0.24, S * 0.5)} ${P(...g.seatBack)} Q ${P(W * 0.12, (S + D.B) / 2)} ${P(...g.backTop)}" ${st}/>`;
+  // front leg up to the arm
+  s += `<path d="M ${P(...g.frontFoot)} Q ${P(W * 0.78, S * 0.5)} ${P(W * 0.84, S)} L ${P(W * 0.88, g.armEnd[1] - 10)}" ${st}/>`;
+  // seat rail
+  s += `<path d="M ${P(...g.seatBack)} Q ${P(W * 0.58, S - 28)} ${P(...g.seatFront)}" ${st}/>`;
+  // arm
+  s += `<path d="M ${P(...g.armStart)} Q ${P(W * 0.5, g.armStart[1] + 25)} ${P(...g.armEnd)}" ${st}/>`;
+  const ae = g.armEnd;
+  // feet and arm end
+  if (tube) {
+    s += `<circle cx="${P(...g.backFoot).split(' ')[0]}" cy="${P(...g.backFoot).split(' ')[1]}" r="${(22 * sc).toFixed(1)}" ${st}/>`;
+    s += `<circle cx="${P(...g.frontFoot).split(' ')[0]}" cy="${P(...g.frontFoot).split(' ')[1]}" r="${(22 * sc).toFixed(1)}" ${st}/>`;
+    s += `<path d="M ${P(W * 0.25, S * 0.35)} Q ${P(W * 0.55, S * 0.75)} ${P(W * 0.8, S * 0.35)}" ${st}/>`;
+    // wooden arm rest
+    s += `<path d="M ${P(W * 0.32, ae[1] + 14)} L ${P(W * 0.86, ae[1] + 10)}" fill="none" stroke="${slatHex}" stroke-width="${(26 * sc).toFixed(1)}" stroke-linecap="round"/>`;
+    s += `<path d="M ${P(ae[0] - 10, ae[1] - 30)} a ${(30 * sc).toFixed(1)} ${(30 * sc).toFixed(1)} 0 1 1 ${(1).toFixed(1)} 0" ${ds}/>`;
+  } else {
+    s += `<path d="M ${P(ae[0] - 20, ae[1])} a ${(28 * sc).toFixed(1)} ${(28 * sc).toFixed(1)} 0 1 0 ${(26 * sc).toFixed(1)} ${(-18 * sc).toFixed(1)}" ${st}/>`;
+    s += `<path d="M ${P(W * 0.16, 90)} L ${P(W * 0.84, 90)}" fill="none" stroke="${fill}" stroke-width="${(sw * 0.6).toFixed(1)}" stroke-linecap="round"/>`;
+  }
+  const cx = W * 0.55, under = S - 120, mid = S + (ae[1] - S) / 2;
+  const leaf = (x, y, a) => { const [px, py] = P(x, y).split(' '); return `<ellipse cx="${px}" cy="${py}" rx="${(16 * sc).toFixed(1)}" ry="${(7 * sc).toFixed(1)}" fill="${dc}" transform="rotate(${a} ${px} ${py})"/>`; };
+  if (motif === 'leaf') {
+    for (let t = 0.1; t < 0.95; t += 0.14) { const x = g.seatBack[0] + (g.backTop[0] - g.seatBack[0]) * t, y = g.seatBack[1] + (g.backTop[1] - g.seatBack[1]) * t; s += leaf(x, y, -70); }
+    for (let t = 0.12; t < 0.95; t += 0.16) s += leaf(g.seatBack[0] + (g.seatFront[0] - g.seatBack[0]) * t, S - 6 * Math.sin(t * Math.PI), 0);
+    const [hx, hy] = P(cx, under).split(' ').map(Number), k = 30 * sc;
+    s += `<path d="M ${hx} ${hy + k} C ${hx - k * 1.4} ${hy} ${hx - k * 0.6} ${hy - k * 0.9} ${hx} ${hy - k * 0.25} C ${hx + k * 0.6} ${hy - k * 0.9} ${hx + k * 1.4} ${hy} ${hx} ${hy + k} Z" ${ds}/>`;
+    s += `<path d="M ${P(W * 0.3, mid)} q ${(60 * sc).toFixed(1)} ${(-40 * sc).toFixed(1)} ${(120 * sc).toFixed(1)} 0 q ${(60 * sc).toFixed(1)} ${(40 * sc).toFixed(1)} ${(120 * sc).toFixed(1)} 0" ${ds}/>`;
+  } else if (motif === 'ladder') {
+    const a = g.seatBack, b = g.backTop;
+    s += `<path d="M ${P(a[0] + 40, a[1] + 30)} L ${P(b[0] + 40, b[1] - 40)}" ${st}/>`;
+    for (let t = 0.15; t < 0.95; t += 0.16) { const x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t; s += `<path d="M ${P(x, y)} L ${P(x + 40, y)}" ${ds}/>`; }
+    s += `<path d="M ${P(W * 0.3, mid - 20)} c ${(40 * sc).toFixed(1)} ${(-60 * sc).toFixed(1)} ${(130 * sc).toFixed(1)} ${(-30 * sc).toFixed(1)} ${(100 * sc).toFixed(1)} ${(20 * sc).toFixed(1)} c ${(-20 * sc).toFixed(1)} ${(30 * sc).toFixed(1)} ${(-60 * sc).toFixed(1)} ${(10 * sc).toFixed(1)} ${(-40 * sc).toFixed(1)} ${(-15 * sc).toFixed(1)}" ${ds}/>`;
+  } else if (motif === 'rosette') {
+    const [rx, ry] = P(cx, mid).split(' ').map(Number), R = 62 * sc;
+    s += `<circle cx="${rx}" cy="${ry}" r="${R.toFixed(1)}" ${ds}/>`;
+    for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; s += `<ellipse cx="${(rx + Math.cos(a) * R * 0.55).toFixed(1)}" cy="${(ry + Math.sin(a) * R * 0.55).toFixed(1)}" rx="${(R * 0.32).toFixed(1)}" ry="${(R * 0.16).toFixed(1)}" fill="${dc}" transform="rotate(${i * 45} ${(rx + Math.cos(a) * R * 0.55).toFixed(1)} ${(ry + Math.sin(a) * R * 0.55).toFixed(1)})"/>`; }
+    s += `<circle cx="${rx}" cy="${ry}" r="${(R * 0.22).toFixed(1)}" fill="${dc}"/>`;
+    s += `<path d="M ${P(W * 0.25, under)} q ${(80 * sc).toFixed(1)} ${(-60 * sc).toFixed(1)} ${(160 * sc).toFixed(1)} 0 t ${(160 * sc).toFixed(1)} 0" ${ds}/>`;
+  } else if (motif === 'lion') {
+    const [lx, ly] = P(ae[0] - 5, ae[1] + 5).split(' ').map(Number), R = 34 * sc;
+    let mane = '';
+    for (let i = 0; i < 14; i++) { const a = i * Math.PI / 7; mane += `${(lx + Math.cos(a) * R * (i % 2 ? 1 : 1.3)).toFixed(1)},${(ly + Math.sin(a) * R * (i % 2 ? 1 : 1.3)).toFixed(1)} `; }
+    s += `<polygon points="${mane}" fill="${dc}" stroke="rgba(0,0,0,0.4)" stroke-width="0.6"/><circle cx="${lx}" cy="${ly}" r="${(R * 0.7).toFixed(1)}" fill="${fill}" stroke="${dc}" stroke-width="1"/>`;
+    s += `<circle cx="${(lx - R * 0.25).toFixed(1)}" cy="${(ly - R * 0.15).toFixed(1)}" r="0.9" fill="${dc}"/><circle cx="${(lx + R * 0.25).toFixed(1)}" cy="${(ly - R * 0.15).toFixed(1)}" r="0.9" fill="${dc}"/>`;
+    s += `<path d="M ${P(W * 0.3, mid)} c ${(30 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(90 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(110 * sc).toFixed(1)} 0 s ${(90 * sc).toFixed(1)} ${(50 * sc).toFixed(1)} ${(130 * sc).toFixed(1)} 0" ${ds}/>`;
+    s += `<path d="M ${P(W * 0.25, under)} c ${(40 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(100 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(120 * sc).toFixed(1)} 0 s ${(80 * sc).toFixed(1)} ${(50 * sc).toFixed(1)} ${(120 * sc).toFixed(1)} 0" ${ds}/>`;
+  } else if (motif === 'shell') {
+    const [fx, fy] = P(cx, S - 70).split(' ').map(Number), R = 34 * sc;
+    for (let i = 0; i < 9; i++) { const a = Math.PI + i * Math.PI / 8; s += `<line x1="${fx}" y1="${fy}" x2="${(fx + Math.cos(a) * R).toFixed(1)}" y2="${(fy + Math.sin(a) * R).toFixed(1)}" stroke="${dc}" stroke-width="${(sw * 0.4).toFixed(1)}" stroke-linecap="round"/>`; }
+    s += `<circle cx="${fx}" cy="${fy}" r="${(R * 0.35).toFixed(1)}" fill="${dc}"/>`;
+    for (let t = 0.1; t < 0.95; t += 0.14) { const x = g.seatBack[0] + (g.backTop[0] - g.seatBack[0]) * t, y = g.seatBack[1] + (g.backTop[1] - g.seatBack[1]) * t; s += leaf(x, y, -60); }
+    s += `<path d="M ${P(W * 0.3, mid)} c ${(-20 * sc).toFixed(1)} ${(-90 * sc).toFixed(1)} ${(260 * sc).toFixed(1)} ${(-110 * sc).toFixed(1)} ${(250 * sc).toFixed(1)} ${(-10 * sc).toFixed(1)}" ${ds}/>`;
+    s += `<path d="M ${P(W * 0.2, 90)} Q ${P(cx, S - 40)} ${P(W * 0.85, 90)}" ${ds}/>`;
+  } else if (motif === 'nasturtium') {
+    [[0.35, mid], [0.62, mid + 20], [0.4, under], [0.68, under + 10]].forEach(([fx, fy]) => {
+      const [px, py] = P(W * fx, fy).split(' ').map(Number), R = 26 * sc;
+      s += `<circle cx="${px}" cy="${py}" r="${R.toFixed(1)}" fill="${dc}" stroke="rgba(0,0,0,0.35)" stroke-width="0.6"/>`;
+      for (let i = 0; i < 5; i++) { const a = i * 1.256; s += `<line x1="${px}" y1="${py}" x2="${(px + Math.cos(a) * R).toFixed(1)}" y2="${(py + Math.sin(a) * R).toFixed(1)}" stroke="rgba(0,0,0,0.35)" stroke-width="0.5"/>`; }
+    });
+  } else {
+    // Victorian scroll: S scrolls under the arm and the seat
+    s += `<path d="M ${P(W * 0.3, mid - 10)} c ${(30 * sc).toFixed(1)} ${(-60 * sc).toFixed(1)} ${(110 * sc).toFixed(1)} ${(-60 * sc).toFixed(1)} ${(130 * sc).toFixed(1)} 0 s ${(100 * sc).toFixed(1)} ${(60 * sc).toFixed(1)} ${(140 * sc).toFixed(1)} 0" ${ds}/>`;
+    s += `<path d="M ${P(W * 0.3, under)} c ${(30 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(110 * sc).toFixed(1)} ${(-50 * sc).toFixed(1)} ${(130 * sc).toFixed(1)} 0 s ${(100 * sc).toFixed(1)} ${(50 * sc).toFixed(1)} ${(140 * sc).toFixed(1)} 0" ${ds}/>`;
+  }
+  return s + '</g>';
+}
+
+function renderExtras(){
+  $('extras').innerHTML = DATA.extras.map(x => `
+    <div class="extra-wrap">
+      <label class="extra" for="x-${x.id}">
+        <input type="checkbox" id="x-${x.id}" data-extra="${x.id}">
+        <span class="extra-body">
+          <span class="extra-top"><span class="extra-name">${esc(x.name)}</span>${x.price === null ? '<span class="extra-price q">Quote required</span>' : `<span class="extra-price">+${gbp(x.price)}</span>`}</span>
+          <span class="extra-desc">${esc(x.desc)}</span>
+        </span>
+      </label>
+      ${x.input ? `<div class="field" id="xi-${x.id}" hidden>
+        <label for="msg-${x.id}">${esc(x.input.label)}</label>
+        ${x.input.long ? `<textarea id="msg-${x.id}" data-text="${x.id}" maxlength="300" placeholder="${esc(x.input.placeholder)}"></textarea>` : `<input type="text" id="msg-${x.id}" data-text="${x.id}" maxlength="60" placeholder="${esc(x.input.placeholder)}">`}
+        ${x.where ? `<span class="opt-meta">Where should it go?</span><div class="cards where" id="wh-${x.id}">${x.where.map((w, i) => `<button type="button" class="opt" data-where="${x.id}" data-id="${esc(w)}" aria-pressed="${i === 0}"><span class="opt-name">${esc(w)}</span></button>`).join('')}</div>` : ''}
+      </div>` : ''}
+    </div>`).join('');
+  $('extras').addEventListener('change', e => {
+    const id = e.target.dataset.extra;
+    if (id) { S.extras[id] = e.target.checked; const box = $('xi-' + id); if (box) box.hidden = !e.target.checked; render(); }
+  });
+  $('extras').addEventListener('input', e => { const id = e.target.dataset && e.target.dataset.text; if (id) { S.text[id] = e.target.value; render(); } });
+  $('extras').addEventListener('click', e => {
+    const b = e.target.closest('button[data-where]'); if (!b) return;
+    S.where[b.dataset.where] = b.dataset.id;
+    $('wh-' + b.dataset.where).querySelectorAll('button').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+    render();
+  });
+}
+
+function wire(id, key, after){
+  $(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || b.disabled) return;
+    S[key] = b.dataset.id; if (after) after(); render();
+  });
+}
+wire('ends', 'end', () => {
+  const e = byId(DATA.ends, S.end), l = byId(DATA.lengths, S.len);
+  if (e.kind === 'adult' && l.kind === 'kids') S.len = '5ft';
+  if (e.kind === 'kids' && l.kind === 'adult' && S.len === '5ft') S.len = 'kids';
+});
+wire('lengths', 'len');
+wire('slats', 'slat', () => {
+  const sl = byId(DATA.slats, S.slat);
+  if (sl.material === 'plastic') S.finish = 'none'; else if (S.finish === 'none') S.finish = 'clear';
+});
+wire('frame', 'frame'); wire('paintFinish', 'paintFinish'); wire('backRest', 'backRest'); wire('panels', 'panel'); wire('boardCol', 'boardColour');
+$('f-backtext').addEventListener('input', e => { S.backText[S.backRest] = e.target.value; }); wire('finish', 'finish'); wire('slatPaint', 'slatPaint'); wire('bolts', 'bolts'); wire('detailCol', 'detail');
+$('detailToggle').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.detailOn = b.dataset.id === 'two'; render(); });
+$('f-custom').addEventListener('input', e => { S.customColour = e.target.value; });
+
+function summaryText(){
+  const c = calc();
+  const L = [];
+  L.push('MY BENCH DESIGN');
+  L.push('Bench ends: ' + c.end.name + ' (' + c.end.id + ')');
+  L.push('Length: ' + c.len.name);
+  L.push('Slats: ' + c.slat.name);
+  if (c.end.backRest) { const br = byId(DATA.backRests, S.backRest); L.push('Back: ' + br.name + (br.id === 'cast' ? (S.panel && byId(DATA.castPanels, S.panel) ? ' (' + byId(DATA.castPanels, S.panel).name + ')' : ' (panel to choose from photos)') : '') + (br.colour ? ' in ' + S.boardColour : '') + (br.input && (S.backText[S.backRest] || '').trim() ? '\n  ' + br.input + ' ' + S.backText[S.backRest].trim() : '')); }
+  L.push('Frame paint: ' + byId(DATA.paintFinishes, S.paintFinish).name);
+  L.push('Frame colour: ' + S.frame);
+  L.push('Painted decoration: ' + (detailOn() ? 'yes, in ' + S.detail : 'no, same as frame'));
+  if (!$('customWrap').hidden) L.push('Custom colour wanted: ' + (S.customColour.trim() || 'not said yet'));
+  L.push('Slat finish: ' + byId(DATA.finishes, S.finish).name + (S.finish === 'paint' ? ' in ' + S.slatPaint : ''));
+  L.push('Bolt finish: ' + S.bolts);
+  const ex = DATA.extras.filter(x => S.extras[x.id]);
+  if (!ex.length) L.push('Extras: none');
+  ex.forEach(x => {
+    let line = 'Extra: ' + x.name;
+    if (x.input) line += '\n  ' + x.input.label + ' ' + ((S.text[x.id] || '').trim() || '(not filled in)');
+    if (x.where) line += '\n  Where: ' + (S.where[x.id] || x.where[0]);
+    L.push(line);
+  });
+  L.push('');
+  L.push('Estimated price: ' + (c.quote ? 'quote required' + (c.total ? ' (from ' + gbp(c.total) + ')' : '') : gbp(c.total)));
+  L.push('');
+  L.push('Name: ' + $('f-name').value.trim());
+  L.push('Email: ' + $('f-email').value.trim());
+  if ($('f-phone').value.trim()) L.push('Phone: ' + $('f-phone').value.trim());
+  L.push('Town or postcode: ' + $('f-town').value.trim());
+  if ($('f-notes').value.trim()) { L.push(''); L.push('Notes: ' + $('f-notes').value.trim()); }
+  return L.join('\n');
+}
+
+$('enquiry').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = $('formErr'); const bad = [];
+  if (!$('f-name').value.trim()) bad.push('your name');
+  if (!/^\S+@\S+\.\S+$/.test($('f-email').value.trim())) bad.push('a working email');
+  if (!$('f-town').value.trim()) bad.push('your town or postcode');
+  if (bad.length) { err.textContent = 'Please add ' + bad.join(', ') + '.'; err.hidden = false; return; }
+  if (!$('f-consent').checked) { err.textContent = 'Please tick the box so we can reply to you.'; err.hidden = false; return; }
+  err.hidden = true;
+  const text = summaryText();
+  $('summary').textContent = text; $('sent').hidden = false;
+  const subject = 'Bench design: ' + byId(DATA.ends, S.end).name + ', ' + byId(DATA.lengths, S.len).name;
+  try { window.location.href = 'mailto:' + DATA.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text); } catch (x) {}
+  $('sent').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+$('copyBtn').addEventListener('click', () => {
+  const text = $('summary').textContent;
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents($('summary')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copyMsg').textContent = 'Selected. Copy it from your menu.'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => { $('copyMsg').textContent = 'Copied'; }, fallback); else fallback();
+});
+
+renderExtras();
+$('gallery').innerHTML = DATA.gallery.map(([src, cap]) => `<figure><img src="${src}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`).join('');
+render();
+</script>
+</body>
+</html>
