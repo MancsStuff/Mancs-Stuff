@@ -166,6 +166,7 @@ footer.sitefoot p { margin: 0; }
   .total { font-size: 2.2rem; }
   .total.q { font-size: 1.4rem; }
   .jump { display: inline; font-size: 0.75rem; }
+  .sent { scroll-margin-top: 250px; }
 }
 @media (max-width: 520px) {
   .cards { grid-template-columns: 1fr 1fr; }
@@ -292,10 +293,16 @@ footer.sitefoot p { margin: 0; }
           <div class="field"><label for="f-town">Town or postcode</label><input type="text" id="f-town" autocomplete="postal-code" required></div>
           <div class="field full"><label for="f-notes">Anything else? (optional)</label><textarea id="f-notes" placeholder="Who it's for, a date you need it by, delivery details..."></textarea></div>
         </div>
-        <label class="consent"><input type="checkbox" id="f-consent"> <span>I'm happy for Mancs Stuff to use these details to reply about this bench. They're not used for anything else. <a href="mancs-stuff-contact.html">Privacy policy</a></span></label>
-        <button type="submit" class="btn">Send my design</button>
+        <label class="consent"><input type="checkbox" id="f-consent"> <span>I'm happy for Mancs Stuff to use these details to reply about this bench. They're not used for anything else. Your form is delivered to Christopher by FormSubmit. <a href="mancs-stuff-legal.html">Privacy policy</a></span></label>
+        <input type="text" id="f-company" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <button type="submit" class="btn" id="sendBtn">Send my design</button>
         <p class="err" id="formErr" hidden></p>
       </form>
+      <div class="sent" id="done" hidden>
+        <h3>Got it, thanks</h3>
+        <p>Your design has gone straight to Christopher. He'll check it by hand and email you with a final price and build date.</p>
+        <p>To start your bench you pay half as a deposit, and the rest on delivery. Nothing is charged until you've said yes to the price.</p>
+      </div>
       <div class="sent" id="sent" hidden>
         <h3>Your design is ready to send</h3>
         <p>Your email app should open with everything filled in. If it doesn't, copy the design below and email it to <span class="email-text">hello@mancsstuff.com</span></p>
@@ -854,7 +861,25 @@ function summaryText(){
   return L.join('\n');
 }
 
-$('enquiry').addEventListener('submit', e => {
+function sendByEmailApp(text, subject) {
+  $('summary').textContent = text; $('sent').hidden = false;
+  try { window.location.href = 'mailto:' + DATA.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text); } catch (x) {}
+  $('sent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function deliver(text, subject) {
+  const stop = new AbortController();
+  const timer = setTimeout(() => stop.abort(), 12000);
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/' + DATA.email, {
+      method: 'POST', signal: stop.signal,
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: subject, _template: 'box', name: $('f-name').value.trim(), email: $('f-email').value.trim(), phone: $('f-phone').value.trim(), town: $('f-town').value.trim(), design: text })
+    });
+    const out = await res.json();
+    return res.ok && String(out.success) === 'true';
+  } catch (x) { return false; } finally { clearTimeout(timer); }
+}
+$('enquiry').addEventListener('submit', async e => {
   e.preventDefault();
   const err = $('formErr'); const bad = [];
   if (!$('f-name').value.trim()) bad.push('your name');
@@ -863,11 +888,13 @@ $('enquiry').addEventListener('submit', e => {
   if (bad.length) { err.textContent = 'Please add ' + bad.join(', ') + '.'; err.hidden = false; return; }
   if (!$('f-consent').checked) { err.textContent = 'Please tick the box so we can reply to you.'; err.hidden = false; return; }
   err.hidden = true;
-  const text = summaryText();
-  $('summary').textContent = text; $('sent').hidden = false;
+  const btn = $('sendBtn'), text = summaryText();
   const subject = 'Bench design: ' + byId(DATA.ends, S.end).name + ', ' + byId(DATA.lengths, S.len).name;
-  try { window.location.href = 'mailto:' + DATA.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text); } catch (x) {}
-  $('sent').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const sent = $('f-company').value ? true : await deliver(text, subject);
+  btn.disabled = false; btn.textContent = 'Send my design';
+  if (sent) { $('enquiry').hidden = true; $('done').hidden = false; $('done').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  else sendByEmailApp(text, subject);
 });
 $('copyBtn').addEventListener('click', () => {
   const text = $('summary').textContent;
