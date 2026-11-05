@@ -84,6 +84,7 @@ h1 span { color: var(--coral); }
 .made-strip img { display: block; width: 200px; height: 200px; object-fit: cover; }
 .made-strip figcaption { font-size: 0.75rem; color: var(--warm-gray); margin-top: 4px; line-height: 1.4; }
 .opt-thumb { display: block; width: calc(100% + 28px); max-width: none; margin: -14px -14px 8px; aspect-ratio: 4 / 3; object-fit: cover; }
+.opt-thumb.panel-thumb { object-fit: contain; background: #111; }
 .tag { display: inline-block; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); border: 1px solid var(--teal); padding: 1px 6px; margin-top: 4px; align-self: flex-start; }
 
 .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -382,11 +383,18 @@ const DATA = {
     { id:'wide', name:'Two wide back slats', price:20, meta:'Two 100 to 150 mm slats, trimmed to fit', photo:'made-leaf-heart-green-wide-slats.jpg' },
     { id:'plain', name:'Plain painted back board', price:50, meta:'Solid board between two slats, one colour', colour:true, photo:'made-plain-board-example.jpg' },
     { id:'design', name:'Hand-painted design back board', price:100, meta:'Your design painted by hand, like the MCR Bee', photo:'made-mcr-bee-kids-bench.jpg', input:'What design do you want on the back?' },
-    { id:'cast', name:'Decorative cast iron back panel', price:100, meta:'One-of-a-kind panels, hand painted. Photo is an example', photo:'made-roses-cast-back-panel.jpg', input:'Any colours you\'d like on the panel?' }
+    { id:'cast', name:'Decorative back panel', price:100, meta:'Pick a panel from stock, hand painted. Photo is a finished example', photo:'made-roses-cast-back-panel.jpg', input:'Any colours you\'d like on the panel?' }
   ],
   /* Cast iron back panels in stock. Each is one of a kind. Add one line per panel:
      { id:'PANEL-01', name:'Roses and hummingbirds', photo:'panel-roses.jpg', width:1100, height:300, stock:1, price:100 } */
-  castPanels: [],
+  castPanels: [
+    { id:'PANEL-01', name:'Climbing Roses', photo:'panel-climbing-roses.jpg', width:1200, height:300, material:'Cast iron', stock:1, price:120 },
+    { id:'PANEL-02', name:'Long Lattice', photo:'panel-long-lattice.jpg', width:1200, height:300, material:'Cast iron', stock:1, price:120 },
+    { id:'PANEL-03', name:'Cane Weave', photo:'panel-cane-weave.jpg', width:550, height:400, material:'Metal', stock:1, price:100 },
+    { id:'PANEL-04', name:'Rose Medallion Lattice', photo:'panel-rose-medallion.jpg', width:550, height:350, material:'Metal', stock:1, price:100 },
+    { id:'PANEL-05', name:'Classic Lattice', photo:'panel-moulded-lattice.jpg', width:550, height:300, material:'Moulded plastic', stock:2, price:100 },
+    { id:'PANEL-06', name:'Arched Lattice', photo:'panel-arched-lattice.jpg', width:550, height:'350 to 400', material:'Metal', stock:2, price:100 }
+  ],
   gallery: [
     ['made-leaf-heart-green-wide-slats.jpg', 'Leaf & Heart ends in green, two wide back slats'],
     ['made-mcr-bee-kids-bench.jpg', 'MCR Bee kids bench, hand-painted back board'],
@@ -550,14 +558,17 @@ function render(){
   $('boardCol').innerHTML = DATA.frame.filter(f => f[1] !== 'custom').map(f => swatch(f[0], f[1], f[0] === S.boardColour, false)).join('');
   const isCast = S.backRest === 'cast';
   $('panelWrap').hidden = !isCast;
-  $('panels').innerHTML = DATA.castPanels.map(p => {
+  const fits = p => c.len.quote || c.len.mm >= p.width;
+  if (S.panel) { const sp = byId(DATA.castPanels, S.panel); if (!sp || !fits(sp) || sp.stock === 0) S.panel = null; }
+  $('panels').innerHTML = DATA.castPanels.filter(fits).map(p => {
     const out = p.stock === 0;
-    const card = { id: p.id, name: p.name, meta: (p.width && p.height ? `${p.width} × ${p.height} mm` : '') };
-    return optBtn(card, p.id === S.panel, out, (out ? '<span class="stock out">Sold out</span>' : '<span class="stock">One in stock</span>'))
-      .replace('<span class="opt-name">', (p.photo ? `<img class="opt-thumb" src="${p.photo}" alt="${esc(p.name)} cast iron back panel" loading="lazy">` : '') + '<span class="opt-name">');
+    const card = { id: p.id, name: p.name, meta: `${p.material} · needs a bench at least ${p.width} mm long · ${p.height} mm high` };
+    return optBtn(card, p.id === S.panel, out, `<span class="opt-price">+${gbp(p.price != null ? p.price : 100)}</span>` + (out ? '<span class="stock out">Sold out</span>' : `<span class="stock">${p.stock === 1 ? 'One' : p.stock} in stock</span>`))
+      .replace('<span class="opt-name">', (p.photo ? `<img class="opt-thumb panel-thumb" src="${p.photo}" alt="${esc(p.name)} ${esc(p.material.toLowerCase())} back panel" loading="lazy">` : '') + '<span class="opt-name">');
   }).join('');
-  $('panels').hidden = !DATA.castPanels.length;
-  $('panelNone').textContent = DATA.castPanels.length ? 'Each panel is one of a kind and sizes vary, so the bench is built to fit the panel you pick.' : 'Every cast panel is one of a kind and they come in different sizes. Christopher will send you photos of the panels in stock, and the bench is built to fit the one you pick.';
+  const nFit = DATA.castPanels.filter(fits).length;
+  $('panels').hidden = !nFit;
+  $('panelNone').textContent = nFit ? 'Pick the panel you want. Each one is a real panel from the workshop, cleaned up and hand painted, with the bench built to fit it.' : (DATA.castPanels.length ? 'None of our panels fit a bench this short. Pick a longer length to see them, or choose a different back.' : 'Christopher will send you photos of the panels in stock.');
   $('backTextWrap').hidden = !brSel.input;
   if (brSel.input) { $('backTextLabel').textContent = brSel.input; const ta = $('f-backtext'); if (document.activeElement !== ta) ta.value = S.backText[S.backRest] || ''; }
   $('paintFinish').innerHTML = DATA.paintFinishes.map(p => optBtn(p, p.id === S.paintFinish, false, p.price ? `<span class="opt-price">+${gbp(p.price)}</span>` : '<span class="opt-meta">Included</span>')).join('');
@@ -835,7 +846,7 @@ function summaryText(){
   L.push('Bench ends: ' + c.end.name + ' (' + c.end.id + ')');
   L.push('Length: ' + c.len.name);
   L.push('Slats: ' + c.slat.name);
-  if (c.end.backRest) { const br = byId(DATA.backRests, S.backRest); L.push('Back: ' + br.name + (br.id === 'cast' ? (S.panel && byId(DATA.castPanels, S.panel) ? ' (' + byId(DATA.castPanels, S.panel).name + ')' : ' (panel to choose from photos)') : '') + (br.colour ? ' in ' + S.boardColour : '') + (br.input && (S.backText[S.backRest] || '').trim() ? '\n  ' + br.input + ' ' + S.backText[S.backRest].trim() : '')); }
+  if (c.end.backRest) { const br = byId(DATA.backRests, S.backRest); L.push('Back: ' + br.name + (br.id === 'cast' ? (S.panel && byId(DATA.castPanels, S.panel) ? ' (' + byId(DATA.castPanels, S.panel).name + ')' : ' (panel not picked yet)') : '') + (br.colour ? ' in ' + S.boardColour : '') + (br.input && (S.backText[S.backRest] || '').trim() ? '\n  ' + br.input + ' ' + S.backText[S.backRest].trim() : '')); }
   L.push('Frame paint: ' + byId(DATA.paintFinishes, S.paintFinish).name);
   L.push('Frame colour: ' + S.frame);
   L.push('Painted decoration: ' + (detailOn() ? 'yes, in ' + S.detail : 'no, same as frame'));
