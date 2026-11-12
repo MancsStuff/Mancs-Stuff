@@ -201,7 +201,7 @@ footer.sitefoot p { margin: 0; }
 <header class="hero"><div class="wrap">
   <p class="eyebrow">Hand-restored in Oldham</p>
   <h1>Design a<br><span>restored bench.</span></h1>
-  <p class="lede">Every bench here was heading for the tip. We bring it back to life with a bit of love instead of letting it go to waste. Pick real cast iron ends from the workshop, choose your slats and colours right down to the bolts, and watch the price build as you go. <strong>Half up front, the rest on delivery.</strong> Want it for Christmas? Order by 4 December.</p>
+  <p class="lede">Every bench here was heading for the tip. We bring it back to life with a bit of love instead of letting it go to waste. Pick real cast iron ends from the workshop, choose your slats and colours right down to the bolts, and watch the price build as you go. <strong>Half up front, the rest on delivery.</strong> <span class="pre-dec">Want it for Christmas? Order by 4 December. <strong>Prices go up on 5 December</strong> (kids benches from £400, adult benches from £600), so anything ordered by 4 December gets today's price.</span></p>
 </div></header>
 
 <section class="made" aria-labelledby="h-made"><div class="wrap">
@@ -371,8 +371,11 @@ window.addEventListener('load',function(){
 <script>
 /* pairs: number of pairs in stock (null = in stock, number not counted yet, 0 = sold out). photo: image file next to this page */
 /* ===== PRICE LIST: change prices here (matches Mancs-Bench-Price-List.xlsx). null = quote required ===== */
+/* New prices start 5 Dec 2026. Until then the old labour applies (Christmas offer: order by 4 December at today's prices). */
+const NEW_PRICES = Date.now() >= new Date('2026-12-05T00:00:00Z').getTime();
+/* ===== PRICE LIST: change prices here (matches Mancs-Bench-Price-List.xlsx). null = quote required ===== */
 const DATA = {
-  labourAdult: 150, labourKids: 100,
+  labourAdult: NEW_PRICES ? 464 : 150, labourKids: NEW_PRICES ? 264 : 100,  /* new: adult benches from £600, kids from £400 */
   flatBar: 6,
   paintFinishes: [
     { id:'brush', name:'Standard brush paint', price:0, meta:'Rust-Oleum or Painter\'s Touch, hand brushed' },
@@ -479,7 +482,7 @@ const DATA = {
     { id:'EXT-02', name:'Name or message', price:null, desc:'Personalised lettering for your bench.',
       input:{ label:'What should it say?', placeholder:"e.g. Nan's Bench" },
       where:['On the back slat', 'On a plaque', 'On the front sign'] },
-    { id:'EXT-03', name:'Memorial bench', price:null, desc:'A bench made in memory of someone. Christopher will talk it through with you.',
+    { id:'EXT-03', name:'Memorial bench', price:null, desc:'A bench made in memory of someone, from £1,000. Christopher will talk it through with you.',
       input:{ label:'What would you like on it, and where?', placeholder:'e.g. In loving memory of Jim, 1948 to 2025, on a brass plaque on the back', long:true } }
   ]
 };
@@ -919,5 +922,6 @@ renderExtras();
 $('gallery').innerHTML = DATA.gallery.map(([src, cap]) => `<figure><img src="${src}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`).join('');
 render();
 </script>
+<script>if (Date.now() >= new Date('2026-12-05T00:00:00Z').getTime()) document.querySelectorAll('.pre-dec').forEach(e => e.remove());</script>
 </body>
 </html>
